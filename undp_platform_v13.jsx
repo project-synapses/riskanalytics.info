@@ -33,6 +33,12 @@ const GROUP_COLOR = {
 
 const MONTHS = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
+// Simple language catalog for header dropdown
+const LANGUAGES = [
+  { code:"ENG", label:"English" },
+  { code:"RUS", label:"Русский" },
+];
+
 const TREND = {
   RIGHT:    { label:"Right Direction",           color:C.good,   icon:"↗" },
   RIGHT_NT: { label:"Right Direction, No Target",color:C.good,   icon:"↗" },
@@ -878,6 +884,105 @@ const COUNTRIES = {
       {year:1929,month:2, group:"Geophysical",   type:"Earthquake",   deaths:3257,affected:null,  econLoss:null,     location:"Ashgabat",       source:"USGS",sl:0.6},
     ],
   },
+
+  // ─── MOCK DATA ADDITIONS ────────────────────────────────────────────────────
+  ALB: {
+    id:"ALB", name:"Albania", region:"Western Balkans", short:"ALB", wbISO:"ALB",
+    totalEvents:32, yearRange:"1980–2025",
+    hazard:0.58, vulnerability:0.60, future:0.63, confidence:0.55,
+    dominantHazards:["Floods","Earthquakes","Landslides"],
+    knownDeaths:420, knownAffected:520000, knownLoss:320000000,
+    deathCov:14, affCov:18, lossCov:7,
+    hazardBreakdown:{ Hydrological:18, Geophysical:9, Meteorological:4, Biological:1 },
+
+    narrative: "Albania faces a classic coastal-mountain risk profile where winter river floods and shallow earthquakes intersect with dense urban growth in floodplains. Recurrent Drin and Vjosa basin floods have displaced tens of thousands of people since the 1990s, while seismic risk remains elevated around Tirana and Durres. Ageing water, energy and road infrastructure amplify even moderate events, and future sea‑level rise plus more intense rainfall could significantly increase annual losses without proactive adaptation.",
+
+    indicators: [
+      { group:"Disaster Record",    label:"Recorded deaths (partial)",       val:"420",      note:"14 of 32 events — mixed hydrological and seismic record", conf:"low" },
+      { group:"Disaster Record",    label:"People affected (partial)",       val:"520K",     note:"18 of 32 events — concentrated in major river basins",    conf:"low" },
+      { group:"Disaster Record",    label:"Recorded economic losses",        val:"$320M",    note:"7 of 32 events — likely undercount of local impacts",     conf:"low" },
+      { group:"Infrastructure",     label:"Critical infrastructure condition",val:"Worn",    note:"Legacy Soviet‑era networks under stress",                 conf:"medium" },
+      { group:"Climate & Future",   label:"Projected temp rise by 2050",     val:"+2.3°C",   note:"Indicative regional projection — mock data",              conf:"low" },
+      { group:"Governance & Capacity", label:"NAP status",                   val:"Draft",    note:"Adaptation planning in development — mock",               conf:"low" },
+    ],
+
+    policy: [
+      { area:"Disaster Risk", indicator:"National DRR strategy",        trend:"RIGHT",    val:"Adopted",      target:"Aligned with Sendai (mock)",    source:"Mock source", year:2023 },
+      { area:"Climate",       indicator:"NDC emissions reduction",      trend:"OFFTRACK", val:"Pledged cuts", target:"2030 target (mock)",           source:"Mock source", year:2022 },
+      { area:"Adaptation",    indicator:"Local DRR plans",              trend:"OFFTRACK", val:"Partial",      target:"Full municipal coverage",      source:"Mock source", year:2024 },
+    ],
+
+    events:[
+      {year:2024,month:1, group:"Hydrological", type:"Flood",        deaths:4,  affected:12000, econLoss:15000000, location:"Shkoder basin",   source:"Mock", sl:0.5},
+      {year:2019,month:11,group:"Hydrological", type:"Flood",        deaths:6,  affected:25000, econLoss:40000000, location:"Central Albania", source:"Mock", sl:0.5},
+      {year:2010,month:1, group:"Hydrological", type:"Flood",        deaths:3,  affected:14000, econLoss:25000000, location:"Lezha",           source:"Mock", sl:0.5},
+      {year:1999,month:8, group:"Geophysical",  type:"Earthquake",   deaths:18, affected:5200,  econLoss:12000000, location:"Tirana region",   source:"Mock", sl:0.4},
+    ],
+  },
+
+  SRB: {
+    id:"SRB", name:"Serbia", region:"Western Balkans", short:"SRB", wbISO:"SRB",
+    totalEvents:28, yearRange:"1984–2025",
+    hazard:0.50, vulnerability:0.55, future:0.57, confidence:0.52,
+    dominantHazards:["River Floods","Heatwaves","Storms"],
+    knownDeaths:310, knownAffected:760000, knownLoss:1800000000,
+    deathCov:10, affCov:16, lossCov:6,
+    hazardBreakdown:{ Hydrological:17, Meteorological:7, Geophysical:2, Biological:2 },
+
+    narrative: "Serbia’s risk profile is dominated by the Sava–Danube river system, where large‑scale floods periodically affect Belgrade and northern municipalities. The 2014 floods remain the benchmark loss event, but smaller annual floods, heatwaves and winter storms steadily erode infrastructure and household resilience. Climate projections suggest more intense rainfall events and hotter, drier summers, increasing both flood and heat‑related health risks.",
+
+    indicators: [
+      { group:"Disaster Record",    label:"Recorded deaths (partial)",   val:"310",    note:"10 of 28 events — flood and heat events dominate",   conf:"low" },
+      { group:"Disaster Record",    label:"People affected (partial)",   val:"760K",   note:"16 of 28 events — includes 2014 mega‑flood",         conf:"low" },
+      { group:"Infrastructure",     label:"Critical infrastructure",     val:"Ageing", note:"Key transport and energy assets exposed to floods",  conf:"medium" },
+      { group:"Climate & Future",   label:"Heatwave frequency",          val:"Rising", note:"Mock upward trend in multi‑day heat events",        conf:"low" },
+      { group:"Governance & Capacity", label:"DRR coordination",         val:"Partial",note:"National framework in place, local gaps (mock)",   conf:"low" },
+    ],
+
+    policy: [
+      { area:"Disaster Risk", indicator:"Flood risk management plan", trend:"RIGHT",    val:"Adopted",     target:"Updated after 2014 floods (mock)", source:"Mock", year:2018 },
+      { area:"Climate",       indicator:"NDC implementation",        trend:"OFFTRACK", val:"In progress", target:"2030 mitigation and resilience",   source:"Mock", year:2022 },
+      { area:"Adaptation",    indicator:"Urban heat action plans",   trend:"OFFTRACK", val:"Pilots",      target:"Main cities covered",              source:"Mock", year:2024 },
+    ],
+
+    events:[
+      {year:2014,month:5, group:"Hydrological", type:"Flood",      deaths:57, affected:150000, econLoss:1400000000, location:"Sava–Danube basin", source:"Mock", sl:0.7},
+      {year:2020,month:8, group:"Meteorological",type:"Heatwave",  deaths:22, affected:32000,  econLoss:8000000,    location:"Belgrade",         source:"Mock", sl:0.4},
+      {year:2005,month:3, group:"Hydrological", type:"Flood",      deaths:6,  affected:21000,  econLoss:30000000,   location:"Central Serbia",   source:"Mock", sl:0.5},
+    ],
+  },
+
+  TUR: {
+    id:"TUR", name:"Türkiye", region:"Western Balkans & Türkiye", short:"TUR", wbISO:"TUR",
+    totalEvents:60, yearRange:"1980–2025",
+    hazard:0.82, vulnerability:0.70, future:0.78, confidence:0.65,
+    dominantHazards:["Earthquakes","Floods","Wildfires","Heatwaves"],
+    knownDeaths:32000, knownAffected:5200000, knownLoss:48000000000,
+    deathCov:24, affCov:30, lossCov:15,
+    hazardBreakdown:{ Geophysical:28, Hydrological:16, Meteorological:10, Biological:6 },
+
+    narrative: "Türkiye combines one of the world’s highest seismic risk corridors with rapidly growing coastal and metropolitan exposure along the Marmara, Aegean and Mediterranean. Catastrophic earthquakes set the upper bound of recorded losses, while recurrent river and flash floods, wildfires and heatwaves place chronic pressure on local systems. Future climate signals point to hotter summers, higher fire weather risk and more intense rainfall events, particularly in urban areas with limited drainage capacity.",
+
+    indicators: [
+      { group:"Disaster Record",    label:"Recorded deaths (partial)",   val:"32,000", note:"Dominated by major earthquake sequences — mock",   conf:"low" },
+      { group:"Disaster Record",    label:"People affected (partial)",   val:"5.2M",   note:"30 of 60 events — earthquakes and floods",        conf:"low" },
+      { group:"Infrastructure",     label:"Critical infrastructure",     val:"Mixed",  note:"Modern assets co‑exist with vulnerable stock",    conf:"medium" },
+      { group:"Climate & Future",   label:"Projected temp rise by 2050", val:"+2.5°C", note:"Indicative regional projection — mock",           conf:"low" },
+      { group:"Governance & Capacity", label:"Seismic building code",    val:"Strengthened", note:"Progress after major quakes — mock",       conf:"medium" },
+    ],
+
+    policy: [
+      { area:"Disaster Risk", indicator:"Earthquake risk reduction", trend:"RIGHT",    val:"Scaled‑up",  target:"Retrofit + urban renewal", source:"Mock", year:2025 },
+      { area:"Climate",       indicator:"Wildfire management",      trend:"OFFTRACK", val:"Stressed",  target:"Modernised aerial & EWS capacity", source:"Mock", year:2023 },
+      { area:"Adaptation",    indicator:"Urban flood resilience",   trend:"OFFTRACK", val:"Patchy",    target:"Major cities climate‑proofed",     source:"Mock", year:2024 },
+    ],
+
+    events:[
+      {year:2023,month:2, group:"Geophysical",  type:"Earthquake", deaths:24000, affected:3000000, econLoss:35000000000, location:"Southern Türkiye", source:"Mock", sl:0.7},
+      {year:2021,month:8, group:"Meteorological",type:"Wildfire",  deaths:10,    affected:15000,   econLoss:700000000,  location:"Mediterranean coast", source:"Mock", sl:0.5},
+      {year:2020,month:6, group:"Hydrological", type:"Flash Flood",deaths:12,    affected:8000,    econLoss:90000000,   location:"Black Sea region",   source:"Mock", sl:0.5},
+    ],
+  },
 };
 
 const CONF_COLOR = { high:C.good, medium:C.warn, low:C.bad };
@@ -1604,6 +1709,10 @@ function CountryDetail({country, onClose, wbCache, setWbCache}){
     UKR:{pop:"43.5M",gdp:"$13,400",poverty:"1.1%",water:"96.2%",urban:"70.0%"},
     UZB:{pop:"35.3M",gdp:"$9,700",poverty:"11.0%",water:"88.1%",urban:"50.4%"},
     TKM:{pop:"6.12M",gdp:"$22,100",poverty:"--",water:"73.8%",urban:"52.4%"},
+    // Mock World Bank-style fallbacks for new prototype countries
+    ALB:{pop:"2.79M",gdp:"$17,500",poverty:"23.0%",water:"96.0%",urban:"63.0%"},
+    SRB:{pop:"6.80M",gdp:"$19,800",poverty:"21.0%",water:"97.0%",urban:"56.0%"},
+    TUR:{pop:"85.0M",gdp:"$32,000",poverty:"13.5%",water:"99.0%",urban:"76.0%"},
   };
   const fb=WB_FB[country.id]||{};
 
@@ -2050,6 +2159,7 @@ export default function App(){
   const [wbCache,setWbCache]=useState({});
   const [leftWidth,setLeftWidth]=useState(520);
   const [isDragging,setIsDragging]=useState(false);
+  const [language,setLanguage]=useState("ENG"); // ENG | RUS | ALB | SRB | TUR
 
   useEffect(()=>{
     if(!isDragging) return;
@@ -2096,18 +2206,46 @@ export default function App(){
             <div style={{fontSize:7,color:C.muted,fontFamily:"'DM Mono',monospace",letterSpacing:"1.5px"}}>ISTANBUL REGIONAL HUB · DISASTER RISK & CLIMATE RESILIENCE</div>
           </div>
         </div>
-        <div style={{display:"flex",gap:4,alignItems:"center"}}>
-          {!selected&&[{k:"overview",l:"Regional"},{k:"compare",l:"Compare"}].map(t=>(
-            <button key={t.k} onClick={()=>setMainTab(t.k)} style={{
-              padding:"5px 14px",borderRadius:6,cursor:"pointer",fontSize:9,
-              background:mainTab===t.k?"rgba(56,189,248,0.12)":C.surface,
-              border:mainTab===t.k?`1px solid ${C.hazard}40`:`1px solid ${C.border}`,
-              color:mainTab===t.k?C.hazard:"rgba(255,255,255,0.35)",
-              fontFamily:"'DM Mono',monospace",letterSpacing:"0.5px"}}>
-              {t.l.toUpperCase()}
-            </button>
-          ))}
-          <span style={{fontSize:7,color:"rgba(255,255,255,0.15)",fontFamily:"'DM Mono',monospace",marginLeft:8}}>PROTOTYPE · 4 COUNTRIES · REAL DATA</span>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <div style={{display:"flex",gap:4,alignItems:"center"}}>
+            {!selected&&[{k:"overview",l:"Regional"},{k:"compare",l:"Compare"}].map(t=>(
+              <button key={t.k} onClick={()=>setMainTab(t.k)} style={{
+                padding:"5px 14px",borderRadius:6,cursor:"pointer",fontSize:9,
+                background:mainTab===t.k?"rgba(56,189,248,0.12)":C.surface,
+                border:mainTab===t.k?`1px solid ${C.hazard}40`:`1px solid ${C.border}`,
+                color:mainTab===t.k?C.hazard:"rgba(255,255,255,0.35)",
+                fontFamily:"'DM Mono',monospace",letterSpacing:"0.5px"}}>
+                {t.l.toUpperCase()}
+              </button>
+            ))}
+          </div>
+          <div style={{width:1,height:18,background:"rgba(148,163,184,0.35)"}}/>
+          <div>
+            <select
+              value={language}
+              onChange={e=>setLanguage(e.target.value)}
+              style={{
+                background:"rgba(15,23,42,0.95)",
+                border:`1px solid ${C.border}`,
+                color:"rgba(248,250,252,0.9)",
+                padding:"4px 12px",
+                borderRadius:999,
+                fontSize:9,
+                fontFamily:"'DM Mono',monospace",
+                letterSpacing:"0.8px",
+                cursor:"pointer",
+                outline:"none",
+                minWidth:64,
+                textAlign:"center"
+              }}
+            >
+              {LANGUAGES.map(l=>(
+                <option key={l.code} value={l.code} style={{background:"#020617",color:"#e5e7eb"}}>
+                  {l.code}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
