@@ -68,7 +68,7 @@ const COUNTRIES = {
       { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"448",          note:"8 of 26 events — severe undercount",                   conf:"low"    },
       { group:"Disaster Record",    label:"People affected (partial)",           val:"388K",          note:"11 of 26 events — 2000 drought dominates at 297K",     conf:"low"    },
       { group:"Disaster Record",    label:"Recorded economic losses",            val:"$57M",          note:"3 of 26 events — severe undercount",                   conf:"low"    },
-      { group:"Disaster Record",    label:"Losses 1994–2014 (all hazards)",      val:">$1.5B",        note:"Floods, EQ, drought, hail, mudflows — World Bank 2017", conf:"medium" },
+      { group:"Disaster Record",    label:"Losses 1994–2015 (all hazards)",      val:">$1.5B",        note:"Floods, EQ, drought, hail, mudflows — World Bank 2017", conf:"medium" },
       { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"79–97% worn",   note:"Electricity 97%, heating 79%, water 58–62% — Yerevan City Passport 2025", conf:"medium" },
       { group:"Infrastructure",     label:"Population below poverty line",       val:"35%",           note:"Amplifies disaster vulnerability — Armenia NAP 2021",   conf:"medium" },
       { group:"Infrastructure",     label:"Unemployment rate",                   val:"28.6%",         note:"Limits adaptive capacity — Armenia NAP 2021",          conf:"medium" },
