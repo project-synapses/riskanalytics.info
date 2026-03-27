@@ -1937,8 +1937,8 @@ function CountryDetail({country, onClose, activePillar, onPillarChange}){
           <h2 style={{fontSize:22,fontWeight:700,margin:0,letterSpacing:"-0.5px"}}>{country.name}</h2>
         </div>
         <div style={{display:"flex",gap:6,alignItems:"center"}}>
+          <button onClick={onClose} style={{...ghostBtn,fontSize:12}}>← ALL COUNTRIES</button>
           <DownloadButton country={country}/>
-          <button onClick={onClose} style={{...ghostBtn,fontSize:10}}>← ALL COUNTRIES</button>
         </div>
       </div>
 
@@ -2118,7 +2118,7 @@ function OverviewPanel({countries, onSelect}){
         {CRISP_PILLARS.map(p=>(
           <div key={p.key} style={{display:"flex",alignItems:"center",gap:5}}>
             <div style={{width:16,height:3,borderRadius:2,background:p.color}}/>
-            <span style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontFamily:"'DM Mono',monospace"}}>{p.short} {p.label}</span>
+            <span style={{fontSize:10,color:"rgba(255,255,255,0.4)",fontFamily:"'DM Mono',monospace"}}>{p.short} {p.label}</span>
           </div>
         ))}
       </div>
@@ -2134,7 +2134,7 @@ function OverviewPanel({countries, onSelect}){
               <div>
                 <div style={{fontSize:14,fontWeight:600,color:"white"}}>{c.name}</div>
               </div>
-              <div style={{textAlign:"center",background:`${crispCol}0d`,borderRadius:6,padding:"4px 10px",border:`1px solid ${crispCol}25`}}>
+              <div style={{textAlign:"center",background:`${crispCol}0d`,borderRadius:6,padding:"4px 0",border:`1px solid ${crispCol}25`,width:72,flexShrink:0}}>
                 <div style={{fontSize:16,fontWeight:700,color:crispCol,fontFamily:"'DM Mono',monospace",lineHeight:1}}>{c.crisp||"—"}</div>
                 <div style={{fontSize:12,color:`${crispCol}99`,fontFamily:"'DM Mono',monospace",letterSpacing:"0.5px",marginTop:1}}>{(c.crispClass||"").toUpperCase()}</div>
               </div>
