@@ -2066,8 +2066,38 @@ function CountryDetail({country, onClose, activePillar, onPillarChange}){
 // ─── INDICATOR BY GROUP (pillar-filtered accordion) ────────────────────────
 function IndicatorsByGroup({country, groups}){
   const [open, setOpen] = useState(groups[0]);
+  const [expandedItems, setExpandedItems] = useState({});
   const filtered = country.indicators.filter(i=>groups.includes(i.group));
   const presentGroups = groups.filter(g=>filtered.some(i=>i.group===g));
+
+  const toggleItem = (group, index) => {
+    const key = `${group}-${index}`;
+    setExpandedItems(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // Dummy score mapping - will be replaced with real data
+  const getDummyScore = (ind) => {
+    // Create consistent scores based on indicator label hash for stability
+    const hash = ind.label.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    
+    // Define score ranges by group
+    const groupScores = {
+      "Disaster Record": [85, 74, 68, 82, 71],
+      "Infrastructure": [79, 65, 58, 72, 61],
+      "Climate & Future": [88, 76, 83, 91, 68],
+      "Economic Exposure": [73, 69, 77, 64, 70],
+      "Governance & Capacity": [55, 62, 48, 59, 51]
+    };
+    
+    const scores = groupScores[ind.group] || [65, 70, 75, 68, 72];
+    return scores[hash % scores.length];
+  };
+
+  const getScoreColor = (score) => {
+    if (score >= 70) return "#f87171"; // red/bad
+    if (score >= 50) return "#fbbf24"; // yellow/warn
+    return "#34d399"; // green/good
+  };
 
   return(
     <div style={{display:"flex",flexDirection:"column",gap:5}}>
@@ -2084,20 +2114,76 @@ function IndicatorsByGroup({country, groups}){
               <span>{group.toUpperCase()}</span>
               <span style={{opacity:0.4,fontSize:12}}>{isOpen?"▲":"▼"} {items.length}</span>
             </button>
-            {isOpen&&items.map((ind,i)=>(
-              <div key={i} style={{
-                padding:"9px 14px",display:"flex",justifyContent:"space-between",alignItems:"flex-start",
-                borderTop:`1px solid rgba(255,255,255,0.04)`,
-                background:i%2===0?"transparent":"rgba(255,255,255,0.01)"}}>
-                <div style={{flex:1}}>
-                  <div style={{fontSize:11,color:"rgba(255,255,255,0.7)"}}>{ind.label}</div>
-                  <div style={{fontSize:12,color:"rgba(255,255,255,0.38)",marginTop:2,fontFamily:"'DM Mono',monospace"}}>
-                    {ind.note}<ConfPill level={ind.conf}/>
+            {isOpen&&items.map((ind,i)=>{
+              const itemKey = `${group}-${i}`;
+              const isExpanded = expandedItems[itemKey];
+              const score = getDummyScore(ind);
+              const scoreColor = getScoreColor(score);
+              
+              return(
+                <div key={i} style={{
+                  borderTop:`1px solid rgba(255,255,255,0.04)`,
+                  background:i%2===0?"transparent":"rgba(255,255,255,0.01)",
+                  overflow:"hidden"
+                }}>
+                  <div 
+                    onClick={() => toggleItem(group, i)}
+                    style={{
+                      padding:"9px 14px",
+                      display:"flex",
+                      justifyContent:"space-between",
+                      alignItems:"center",
+                      cursor:"pointer",
+                      transition:"background 0.15s"
+                    }}
+                    onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,0.03)"}
+                    onMouseLeave={e=>e.currentTarget.style.background=i%2===0?"transparent":"rgba(255,255,255,0.01)"}
+                  >
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.7)",flex:1}}>{ind.label}</div>
+                    <div style={{display:"flex",alignItems:"center",gap:12,marginLeft:16}}>
+                      {/* Progress bar */}
+                      <div style={{width:80,height:4,background:"rgba(255,255,255,0.1)",borderRadius:2,position:"relative"}}>
+                        <div style={{
+                          position:"absolute",
+                          left:0,
+                          top:0,
+                          height:"100%",
+                          width:`${score}%`,
+                          background:scoreColor,
+                          borderRadius:2,
+                          transition:"width 0.3s ease"
+                        }}/>
+                      </div>
+                      {/* Score */}
+                      <div style={{fontSize:14,fontWeight:700,color:scoreColor,fontFamily:"'DM Mono',monospace",width:28,textAlign:"right",flexShrink:0}}>{score}</div>
+                      {/* Arrow */}
+                      <div style={{
+                        fontSize:14,
+                        color:"rgba(255,255,255,0.3)",
+                        transition:"transform 0.2s ease",
+                        transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                        width:16,
+                        textAlign:"center",
+                        flexShrink:0
+                      }}>
+                        ▼
+                      </div>
+                    </div>
                   </div>
+                  {isExpanded && (
+                    <div style={{
+                      padding:"8px 14px 12px 14px",
+                      borderTop:"1px solid rgba(255,255,255,0.04)",
+                      background:"rgba(0,0,0,0.2)"
+                    }}>
+                      <div style={{fontSize:11,color:"rgba(255,255,255,0.5)",lineHeight:"1.5",fontFamily:"'DM Mono',monospace"}}>
+                        {ind.note}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div style={{fontSize:14,fontWeight:700,color:"white",fontFamily:"'DM Mono',monospace",marginLeft:16,flexShrink:0}}>{ind.val}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         );
       })}
