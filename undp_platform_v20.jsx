@@ -72,26 +72,39 @@ const COUNTRIES = {
     narrative: "Armenia faces a compound risk profile where hydrological hazards — primarily flash floods — account for over half of all recorded events, while Soviet-era infrastructure consistently amplifies their impact. The 1982 earthquake (400 deaths) and 2014 floods (25 deaths, 4,700 houses, $5M loss) define the upper bound of recorded losses, but data coverage remains partial across most events. Infrastructure decay rates of 79–97% in heating and electricity networks mean any moderate event can cascade rapidly. Looking forward, projected temperature rises of +5°C by 2100 and growing water stress will compound an already stretched system.",
 
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"448",          note:"8 of 26 events — severe undercount",                   conf:"low"    },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"388K",          note:"11 of 26 events — 2000 drought dominates at 297K",     conf:"low"    },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$57M",          note:"3 of 26 events — severe undercount",                   conf:"low"    },
-      { group:"Disaster Record",    label:"Losses 1994–2015 (all hazards)",      val:">$1.5B",        note:"Floods, EQ, drought, hail, mudflows — World Bank 2017", conf:"medium" },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"79–97% worn",   note:"Electricity 97%, heating 79%, water 58–62% — Yerevan City Passport 2025", conf:"medium" },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"35%",           note:"Amplifies disaster vulnerability — Armenia NAP 2021",   conf:"medium" },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"28.6%",         note:"Limits adaptive capacity — Armenia NAP 2021",          conf:"medium" },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Partial",       note:"Not nationwide — UNDP Armenia DRR 2023 / NAP 2021 §2.3", conf:"medium" },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.23°C",       note:"1929–2016 vs 1961–1990 baseline — 4th Nat. Comm. 2020", conf:"high"   },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"–9%",           note:"1935–2016 annual average, trend accelerating — NAP 2021", conf:"high"  },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+3.3°C",        note:"National avg, METRAS model RCP8.5 — NAP 2021 Table 1",  conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+4.7°C",        note:"National avg, METRAS/4th Nat. Comm. 2020 RCP8.5",       conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"25,855 Gg CO₂eq",note:"Reference year for 40% reduction target — NDC 2021",   conf:"high"   },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"≤15,513 Gg",    note:"40% below 1990 baseline — Decree N610-L, Apr 2021",     conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"~1.3%/yr",      note:"World Bank Country Climate and Development Report 2022", conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"High",          note:"Water scarcity & heat stress threaten food systems",     conf:"medium" },
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2021",  note:"NAP 2021–2025 — GCF-UNDP project, Decree N749-L",      conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"2nd NDC — 40% below 1990 by 2030, Decree N610-L",      conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"Absent",        note:"Not yet established — flagged as critical gap, NAP 2021 §46", conf:"high" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Identified as priority measure — NAP 2021 measure 2.7", conf:"medium" },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"1.8 /yr/1M",    note:"Events per 100yr window per million pop — Event Database",  conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Moderate-High", note:"Deaths + affected weighted per event; earthquakes & floods dominate — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Moderate",      note:"Flood–landslide co-occurrence elevated in northern provinces — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.4×",          note:"5-yr rate vs 100-yr baseline — increasing flash flood frequency since 2010", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.23°C anomaly",note:"1929–2016 vs 1961–1990 baseline; precip –9% — 4th Nat. Comm. 2020 / NAP 2021", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Medium-High",   note:"Kura-Araks basin under increasing pressure — FAO AQUASTAT 2023", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~38%",          note:"Flood inundation + seismic zones; mountainous terrain amplifies — GFDRR est.", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~30%",          note:"Gridded GDP in hazard corridors — World Bank est. mock", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~55%",          note:"Road network intersected with landslide & flood zones — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"High",  note:"Hospitals and schools in seismic and flood zones — GFDRR/WHO est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~18%",          note:"World Bank PovcalNet 2023 — amplifies disaster mortality", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Moderate",      note:"Drought risk to agricultural output — FAO FAOSTAT 2023",  conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"3.1 per 1,000", note:"Physicians + nurses; strained during mass-casualty events — WHO GHO 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.228",         note:"UNDP HDR 2023 — moderate inequality amplifies impact",    conf:"high"   },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"60th pct",      note:"World Bank WGI 2023 — functional but capacity-constrained", conf:"high"  },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"46/100",        note:"Transparency International 2023 — moderate risk of diversion", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~70%",          note:"High gas import share — IEA 2023; vulnerability to supply disruption", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Moderate-Low",  note:"Import dependency + yield variability in drought years — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"~72%",          note:"Partial — not nationwide; CO-verified figure — UNDRR Sendai Monitor / NAP 2021 §2.3", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"2/3",           note:"Platform + budget exist; legal mandate limited — UNDRR Sendai Monitor 2023", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. 28% GDP",  note:"IMF WEO 2024 — moderate capacity to mobilise recovery spending", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Low",           note:"Electricity 97% worn, heating 79%, water 58–62% — Yerevan City Passport 2025", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.1°C by 2050", note:"IPCC AR6 South Caucasus regional downscale — Copernicus CCS", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"Moderate risk", note:"Minor glacial contribution to Kura-Araks; increasing summer low flows — WGMS est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.3%/yr",      note:"Forest cover loss + pasture degradation — Hansen GFC 2023 est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Moderate-High", note:"Projected crop yield –15%, runoff –20% by 2050 — FAO/IPCC AR6 / Aqueduct WRI", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Moderate",      note:"Climate-driven displacement risk by 2030–2050 — IDMC projections", conf:"low" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"15,000 Gg trend ↓",note:"NDC target 40% below 1990 by 2030; emissions declining — OWID/Global Carbon Project", conf:"high" },
     ],
 
     policy: [
@@ -139,26 +152,39 @@ const COUNTRIES = {
     narrative: "Belarus presents a fundamentally different risk profile from Central Asian neighbours — no seismic exposure, lower hazard frequency, and relatively stronger baseline infrastructure. The dominant threats are extreme temperature events (heat waves accounting for 4 of 8 recorded death events) and epidemics, including COVID-19 which generated 99% of all recorded affected figures. Flood risk is present but moderate, concentrated in western oblasts. The more significant long-term concern is climate trajectory: heat extremes that were once rare are now recurring annually, and the country lacks a comprehensive DRR framework aligned to this shifting pattern.",
 
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"7,182",         note:"Dominated by COVID-19 (7,118) — WHO 2020",             conf:"medium" },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"1.11M",         note:"10 of 24 nat. events — COVID dominates",               conf:"low"    },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$73M",          note:"1 of 24 events (1997 storm) — extreme undercount",     conf:"low"    },
-      { group:"Disaster Record",    label:"Recurring heat events (count)",       val:"5",             note:"2006, 2010, 2013, 2014, 2017 — annual threat emerging", conf:"high"   },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Ageing Soviet stock", note:"Energy efficiency concern — UNDP Belarus 2022",  conf:"medium" },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"5.6%",          note:"Lower than regional avg — World Bank 2022",            conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"3.8%",          note:"Official rate — World Bank 2022",                      conf:"medium" },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Exists",        note:"Multi-hazard EWS operational — Belarus MES 2023",      conf:"high"   },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.5°C",        note:"1990–2023 trend — Belarus State Committee for Hydrometeorology", conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"+5% (variable)",note:"Mixed signal — wetter west, drier east — IPCC AR6",   conf:"low"    },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.1°C",        note:"IPCC AR6 Eastern Europe / Belarus Nat. Comm. 2022",     conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+4.0°C",        note:"High-emission scenario — Belarus Nat. Comm. 2022",      conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"139,146 Gg CO₂eq",note:"1990 reference — Belarus NDC 2021",                 conf:"high"   },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"35% below 1990",note:"Unconditional — Belarus NDC 2021",                     conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Not published in NDC/NAP documents",                   conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"High",          note:"Drought and heat stress risk to major crop sectors",    conf:"medium" },
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2022",  note:"Belarus NAP 2022 — UNFCCC process",                    conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"35% below 1990 by 2030 — Belarus NDC 2021",           conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"Partial",       note:"MRV system developing — Belarus BUR 2022",             conf:"medium" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Not referenced in available documents",               conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"0.9 /yr/1M",    note:"Events per 100yr window per million pop — low-moderate rate — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Low-Moderate",  note:"Heat waves dominate mortality; COVID-19 skews affected count — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Low",           note:"Flood–heat co-occurrence possible; no major compound events recorded — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.6× heat",     note:"Heat event frequency rising — 5 events since 2006 vs rare prior — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.5°C anomaly",note:"1990–2023 warming trend — Belarus State Committee for Hydrometeorology", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Low",           note:"Abundant freshwater — FAO AQUASTAT; drought risk emerging in east — est.", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~15%",          note:"Flood zones in western oblasts; low seismic exposure — GFDRR est.", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~12%",          note:"Agricultural GDP in floodplain areas — World Bank est. mock", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~20%",          note:"River corridor road network — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Low-Moderate", note:"Pripyat basin flood exposure — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~5.6%",         note:"World Bank 2022 — lower than regional average", conf:"high" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Low",           note:"Domestic food production adequate — FAO FAOSTAT 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"5.8 per 1,000", note:"Physicians + nurses; above regional average — WHO GHO 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.115",         note:"UNDP HDR 2023 — relatively low gender inequality", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"45th pct",      note:"World Bank WGI 2023 — centralised; coordination capacity exists", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"41/100",        note:"Transparency International 2023 — moderate corruption risk", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~85%",          note:"Gas import dependency from Russia — IEA 2023; high systemic fragility", conf:"high" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Moderate",      note:"Low import dependency but yield variability under heat stress — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Operational",   note:"Multi-hazard EWS in place — Belarus MES Annual Report 2023", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"2/3",           note:"Platform and budget exist; mandate scope limited — UNDRR Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~40% GDP", note:"IMF WEO 2024 — state-led economy; capacity to mobilise spending", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Moderate",      note:"Soviet-era stock; ageing but functional — UNDP Belarus 2022", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.1°C by 2050", note:"IPCC AR6 Eastern Europe regional downscale — Belarus Nat. Comm. 2022", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"N/A",           note:"No glaciated terrain — excluded from composite; FS weights renormalised", conf:"high" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.2%/yr",      note:"Stable forest cover; some peat degradation — Hansen GFC 2023 est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Low-Moderate",  note:"Crop yield –5–10% projected by 2050; adequate water buffer — FAO/IPCC est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Low",           note:"Climate-driven displacement risk low — IDMC 2030 projections", conf:"medium" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"35% below 1990 target", note:"Unconditional NDC; emissions trend declining — OWID/UNFCCC", conf:"high" },
     ],
 
     policy: [
@@ -203,26 +229,39 @@ const COUNTRIES = {
     narrative: "Tajikistan carries the highest compound risk of any country in this dataset — driven by the convergence of annual flash floods, active seismicity, glacial hazards, and extreme heat, all concentrated on a population with limited adaptive capacity. Recorded economic losses exceed $720M across 18 events, almost certainly a fraction of actual impact given that only 26% of events have any economic data. The 1998 floods alone killed 134 people and caused $60M in damage. In the capital Dushanbe alone, annual losses from natural hazards are estimated at 1–1.5% of GRP today, rising to 2–3% by the second half of the century without proactive DRR/CCA measures. Infrastructure decay is severe: water losses reach 60% in urban supply networks and 40% in district heating. Average annual temperatures in Dushanbe have already risen by 3.2°C over the past 50 years — nearly triple the global average — with crop yield losses projected at up to 50% by 2050 and a water deficit deepening as glaciers retreat.",
 
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"502",           note:"57% of 70 events have data — best coverage in CA",     conf:"medium" },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"5.66M",         note:"52% of events — multiple large floods",                conf:"medium" },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$720M",         note:"18 of 70 events — likely major undercount",            conf:"low"    },
-      { group:"Disaster Record",    label:"Deadliest single event",             val:"134 dead",       note:"1998 floods, Vose/Kulob/Garm — DesInventar",           conf:"high"   },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"40–60% worn",   note:"Water losses 60%, heating 40% — Dushanbe GCAP 2022 / ESCAP Review 2020",   conf:"medium" },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"26.3%",         note:"World Bank 2022 — high vulnerability amplifier",       conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"10.1%",         note:"Official rate — World Bank 2022",                      conf:"medium" },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Partial",       note:"UNDP Tajikistan DRR 2024 — limited coverage",          conf:"medium" },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+3.2°C (Dushanbe)",note:"1975–2025, Dushanbe city — Dushanbe Risk Profile 2025 / ADB-WB 2021",  conf:"high"   },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"Highly variable",note:"Seasonal extremes increasing — Tajikistan NC 2022",  conf:"low"    },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.8°C",        note:"IPCC AR6 / Tajikistan 4th Nat. Comm.",                 conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+5.5°C",        note:"RCP8.5 high-emission — Tajikistan NC 2022",            conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"47,000 Gg CO₂eq",note:"1990 reference — Tajikistan NDC 2021",               conf:"medium" },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"50–65% below 1990",note:"Conditional on finance — Tajikistan NDC 2021",      conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Not published in current NDC/NAP",                     conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"Critical",      note:"50% crop yield loss risk by 2050 — Tajikistan NAP 2023", conf:"medium"},
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2023",  note:"Tajikistan NAP 2023 — GCF-UNDP support",              conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"Updated NDC — 50–65% below 1990 by 2030",             conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"In development",note:"UNDP Tajikistan DRR 2024 — partial MRV",              conf:"medium" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Not referenced in available NAP/NDC documents",       conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"3.1 /yr/1M",    note:"Events per 100yr window per million pop — highest in portfolio — Event Database", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"High",          note:"Deaths + affected weighted per event; 1998 floods 134 dead / $60M — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"High",          note:"Flood–landslide co-occurrence: high — primary proprietary signal — Event Database", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.5×",          note:"5-yr event rate vs 100-yr baseline — accelerating since 2010 — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+3.2°C (Dushanbe)", note:"1975–2025 city-level rise; 3× global avg — Dushanbe Risk Profile 2025 / ADB-WB 2021", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"High",          note:"Intensive irrigation agriculture; Amu Darya basin under stress — FAO AQUASTAT 2023", conf:"high" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~54%",          note:"Mountainous high-risk areas; flood inundation + seismic zones — GFDRR / World Bank", conf:"medium" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~45%",          note:"Agricultural GDP concentrated in river valleys exposed to floods — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"70%+ exposed",  note:"Road network in landslide + flood corridors — UNDRR/ADB 2022", conf:"medium" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"High",  note:"Hospitals and schools in seismic and flood zones — GFDRR/WHO est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"26.3%",         note:"World Bank PovcalNet 2023 — primary mortality amplifier", conf:"high" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"High",          note:"50% crop yield loss risk by 2050; current food stress elevated — FAO FAOSTAT 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"2.3 per 1,000", note:"Physicians + nurses; thin system amplifies disaster mortality — WHO GHO 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.317",         note:"UNDP HDR 2023 — high inequality reduces evacuation and recovery agency", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"18th pct",      note:"World Bank WGI 2023 — low institutional capacity for disaster response", conf:"high" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"20/100",        note:"Transparency International 2023 — high diversion risk for reconstruction funds", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"High — Uzbekistan gas", note:"External energy dependency; supply disruption cascades across systems — IEA 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Low",           note:"High import dependency + volatile cereal yields — World Bank WDI / FAO FAOSTAT", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"~28%",          note:"Low — CO-verified; Sendai Monitor self-report revised downward — UNDRR Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"2/3",           note:"Platform and DRR strategy exist; budget and mandate weak — UNDRR Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. 33% GDP (aid-dependent)", note:"IMF WEO 2024 — highly aid-dependent; limited independent recovery capacity", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Low",           note:"Water losses 60%, heating 40% — Dushanbe GCAP 2022 / ESCAP Review 2020", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+3.1°C by 2050", note:"Central Asia — highest regional warming rate — IPCC AR6 SRCCL / Copernicus", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"−41% vol. by 2100", note:"RCP4.5; dominant long-run risk driver — Zemp et al. (2019) / WGMS", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.8%/yr",      note:"Forest cover + pasture degradation accelerating — Hansen GFC 2023 / ESA CCI", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Very High",     note:"Crop yield –50% by 2050; runoff –30%; hydropower capacity at risk — FAO/IPCC/IEA", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"High",          note:"Climate displacement risk 2030–2050 elevated — IOM / IDMC projections", conf:"medium" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"Low absolute; NDC 50–65% ↓", note:"Low emitter but trajectory rising — OWID/Global Carbon Project / Tajikistan NDC 2021", conf:"medium" },
     ],
 
     policy: [
@@ -277,26 +316,39 @@ const COUNTRIES = {
     narrative: "Kyrgyzstan's risk landscape is defined by the combination of active seismicity, dense informal settlements on hazard-prone slopes, and rapid glacier-driven hydrological change. The record extends to 1911 (Chon-Kemin earthquake, 452 deaths), giving one of the longest time horizons in the dataset. The 2008 Nura earthquake (75 deaths) and 2003–2004 landslide cluster (67 deaths across two events) illustrate the persistent geophysical threat. Osh city — 478K population, growing at 8% annually on seismic slopes — represents the single highest urban concentration risk in the region. Projected 30% water deficit by 2030 from glacier retreat will compound food and livelihood insecurity significantly.",
 
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"2,927",         note:"16 of 45 events — 1911 Chon-Kemin EQ dominates at 452", conf:"low"  },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"259K",          note:"12 of 45 events — COVID dominates 2020",               conf:"low"    },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$5M",           note:"3 of 45 events — extreme undercount",                  conf:"low"    },
-      { group:"Disaster Record",    label:"Deadliest single event",             val:"452 dead",       note:"1911 Chon-Kemin earthquake — USGS",                    conf:"medium" },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"50%+ worn (Osh)",note:"Water network decay — Osh Risk Profile 2025",          conf:"low"    },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"33.3%",         note:"World Bank 2022 — high vulnerability amplifier",       conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"6.2%",          note:"Official rate — World Bank 2022",                      conf:"high"   },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Partial",       note:"Not full coverage — UNDP Kyrgyzstan DRR 2024",         conf:"medium" },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.2°C",        note:"1935–2020 — Kyrgyzstan Nat. Comm. 2022",               conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"Increasing (N)",note:"More intense events in north — Kyrgyzstan NAP 2022",  conf:"low"    },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.5°C",        note:"IPCC AR6 / Kyrgyzstan Nat. Comm.",                     conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+6.2°C",        note:"SSP5-8.5 high-emission — Osh Risk Profile 2025",       conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"30,000 Gg CO₂eq",note:"Estimated reference — Kyrgyzstan NDC 2021",           conf:"medium" },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"44% below 1990",note:"Conditional on finance — Kyrgyzstan NDC 2021",         conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Climate finance need estimated at $1.5B — NDC 2021",   conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"Critical",      note:"30% water deficit by 2030 from glacier retreat",       conf:"medium" },
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2022",  note:"Kyrgyzstan NAP 2022 — UNFCCC process",                conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"44% below 1990 by 2030 — Kyrgyzstan NDC 2021",        conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"In development",note:"Kyrgyzstan NAP 2022 — monitoring framework pending",  conf:"medium" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Not referenced in available NAP/NDC documents",       conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"2.3 /yr/1M",    note:"45 events over period; floods + landslides dominant — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"High",          note:"1911 Chon-Kemin EQ (452 dead); 2003–2004 landslides (67 dead) — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"High",          note:"Flood–landslide co-occurrence high in Osh and Jalal-Abad — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.4×",          note:"5-yr event rate exceeds 100-yr baseline — accelerating floods — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.2°C anomaly",note:"1935–2020 — Kyrgyzstan Nat. Comm. 2022; increasing event intensity", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"High (south)",  note:"Fergana Valley irrigation stress; Naryn glacier-fed rivers at risk — FAO AQUASTAT", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~60%",          note:"Mountainous terrain; majority in flood + landslide exposed valleys — GFDRR est.", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~50%",          note:"Agricultural GDP concentrated in Fergana and Chuy valleys — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~65%",          note:"Mountain road network in landslide + flood corridors — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"High",  note:"Osh urban infrastructure in seismic and flood zones — Osh Risk Profile 2025", conf:"medium" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"33.3%",         note:"World Bank 2022 — high disaster mortality amplifier", conf:"high" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"High",          note:"30% water deficit by 2030 from glacier retreat threatens food systems — FAO est.", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"2.9 per 1,000", note:"Physicians + nurses; strained — WHO GHO 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.364",         note:"UNDP HDR 2023 — high inequality reduces adaptive agency", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"25th pct",      note:"World Bank WGI 2023 — limited institutional disaster response capacity", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"26/100",        note:"Transparency International 2023 — high diversion risk", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~40%",          note:"Hydro-dominant but fossil fuel imports for heating — IEA 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Low",           note:"High cereal import dependency; glacier retreat threatens irrigation — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Partial",       note:"Not full national coverage — UNDP Kyrgyzstan DRR 2024 / Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"2/3",           note:"Platform and strategy confirmed; local mandate weak — UNDRR Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~25% GDP", note:"IMF WEO 2024 — remittance-dependent economy; limited recovery capacity", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Low",           note:"Water network 50%+ worn in Osh — Osh Risk Profile 2025", conf:"low" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.5°C by 2050", note:"IPCC AR6 Central Asia — Kyrgyzstan Nat. Comm. 2022", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"High — Tian Shan", note:"30% glacier volume loss projected; Naryn and Kara Darya flow reduction — WGMS", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.6%/yr",      note:"Pasture degradation + forest loss — Hansen GFC 2023 / ESA CCI est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Very High",     note:"Glacier retreat drives crop yield –25% and runoff –20% by 2050 — FAO/IPCC/IEA", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"High",          note:"Climate + poverty driven displacement risk by 2050 — IDMC projections", conf:"medium" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"44% below 1990 target", note:"Conditional NDC; low absolute emitter — OWID / Kyrgyzstan NDC 2021", conf:"high" },
     ],
 
     policy: [
@@ -343,26 +395,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Hydrological:25, Meteorological:9, Biological:3, Geophysical:1 },
     narrative:"Bosnia and Herzegovina is defined by two converging threats: exceptional flood exposure along the Sava, Bosna and Neretva river systems, and rapidly intensifying heat extremes. The 2014 floods caused $3.3 billion in losses and displaced over a million people -- the largest non-seismic disaster in this entire dataset. The 2024 heat event killed 909 people, signalling that extreme temperature is no longer a background risk but an acute annual threat. Post-war infrastructure fragmentation across entity lines complicates coordinated disaster response.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"1,005",         note:"25 of 35 natural events — 2024 heat wave 909 deaths",  conf:"medium" },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"2.51M",         note:"28 of 35 events — 2014 floods dominate at 1M displaced", conf:"medium"},
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$3.38B",        note:"8 events — dominated by 2014 floods (EU/WB estimate)", conf:"medium" },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"909 dead",      note:"2024 extreme heat event — IFRC",                       conf:"high"   },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Entity-fragmented",note:"Post-war BiH-wide DRR coordination gaps",           conf:"medium" },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"16.9%",         note:"World Bank 2022",                                      conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"14.5%",         note:"World Bank 2022 — high vulnerability",                 conf:"high"   },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Partial",       note:"Entity-level gaps — UNDRR BiH Review 2023",            conf:"medium" },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.7°C",        note:"1961–2020 — Bosnia Hydromet Institute 2022",           conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"–5% (variable)",note:"Increasing intensity, decreasing annual avg — IPCC AR6", conf:"low" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.5°C",        note:"IPCC AR6 Western Balkans",                             conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+4.5°C",        note:"RCP8.5 — IPCC AR6 Western Balkans",                   conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"34,000 Gg CO₂eq",note:"Estimated — BiH NDC 2020",                           conf:"medium" },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"18% below 1990",note:"Unconditional — BiH NDC 2020",                        conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Not published in current BiH NDC/NAP",                conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"High",          note:"Drought and heat risk — BiH NAP 2021",                conf:"medium" },
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2021",  note:"BiH NAP 2021 — entity coordination challenge",        conf:"medium" },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2020",  note:"18% below 1990 by 2030 — BiH NDC 2020",              conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"Partial",       note:"Entity-level systems — BiH-wide integration pending", conf:"medium" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Identified gap — UNDRR BiH Review 2023",             conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"1.4 /yr/1M",    note:"38 events over period; floods + heat dominant — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Very High",     note:"2014 floods ($3.3B loss, 1M displaced); 2024 heat (909 dead) — Event Database", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Moderate",      note:"Flood–landslide co-occurrence in river basins — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.5× heat",     note:"Heat event frequency and severity rising steeply since 2010 — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.7°C anomaly",note:"1961–2020 — Bosnia Hydromet Institute 2022; precip –5%", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Low-Moderate",  note:"Sava/Bosna/Neretva well-supplied but flood-prone — FAO AQUASTAT 2023", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~35%",          note:"Sava, Bosna, Neretva floodplains; urban concentration — Global Flood Database", conf:"medium" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~30%",          note:"Industry and agriculture in river floodplains — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~40%",          note:"River corridor roads exposed to flood damage — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Moderate-High", note:"Power and water infrastructure in flood zones — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~16.9%",        note:"World Bank 2022 — moderate vulnerability", conf:"high" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Moderate",      note:"Agricultural flood damage chronic — FAO FAOSTAT 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"3.5 per 1,000", note:"Physicians + nurses; entity fragmentation limits coordination — WHO GHO 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.174",         note:"UNDP HDR 2023 — relatively low gender inequality", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"40th pct",      note:"World Bank WGI 2023 — entity-level fragmentation hinders DRR coordination", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"36/100",        note:"Transparency International 2023 — significant risk", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~45%",          note:"Coal and gas imports; transition-dependent — IEA 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Moderate",      note:"Domestic production adequate in normal years; flood disruption risk — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Partial",       note:"Entity-level gaps — UNDRR BiH Review 2023 / Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"2/3",           note:"Platform exists; budget fragmented across entities; mandate weak — UNDRR Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~42% GDP", note:"IMF WEO 2024 — adequate but reconstruction spending constrained post-2014", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Low-Moderate",  note:"Post-war infrastructure fragmentation; flood protection incomplete — UNDP BiH 2023", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.2°C by 2050", note:"IPCC AR6 Western Balkans regional downscale — Copernicus CCS", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"N/A",           note:"No glaciated terrain — excluded from composite", conf:"high" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.3%/yr",      note:"Forest cover stable; some riparian degradation — Hansen GFC 2023 est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Moderate",      note:"Crop yield –10% and hydropower stress projected by 2050 — FAO/IPCC/IEA", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Moderate",      note:"Economic + climate out-migration overlapping — IDMC est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"35% below 1990 target", note:"NDC adopted; coal-dominant; slow transition — OWID / BiH NDC 2021", conf:"medium" },
     ],
 
     policy: [
@@ -396,26 +461,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Meteorological:10, Hydrological:6, Geophysical:4, Biological:1 },
     narrative:"Cyprus presents lower hazard frequency than most countries here, but its Mediterranean island geography concentrates converging risks. Extreme heat events are now the dominant killer -- 101 deaths in 2022 -- and are projected to intensify significantly. Wildfire seasons are extending with reduced winter rainfall. Future risk is rated considerably higher than current hazard because the Eastern Mediterranean climate trajectory is among the most severe in the region: temperatures rising 2-3x the global average, precipitation declining 20-30% by 2100.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"155",           note:"7 of 21 events — 2022 heat wave dominates at 101",    conf:"medium" },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"8,081",         note:"10 of 21 events — lower than most countries",         conf:"medium" },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$4.6M",         note:"2 events only — severe undercount",                   conf:"low"    },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"101 dead",      note:"2022 extreme heat event — IFRC",                      conf:"high"   },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Water-stressed", note:"Desalination-dependent island — drought critical",   conf:"high"   },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"13.1%",         note:"EU-SILC 2022",                                        conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"6.9%",          note:"Eurostat 2022",                                       conf:"high"   },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Operational",   note:"EU civil protection framework — Cyprus DDPM 2023",    conf:"high"   },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.8°C",        note:"1961–2020 — Cyprus Met Dept 2022",                    conf:"high"   },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"–15%",          note:"1980–2020 annual avg — Eastern Mediterranean signal", conf:"high"   },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.8°C",        note:"IPCC AR6 Eastern Mediterranean — 2–3× global avg",   conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+5.0°C",        note:"RCP8.5 — Eastern Mediterranean hotspot",             conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"5,700 Gg CO₂eq",note:"EU-aligned baseline — Cyprus NDC 2021",              conf:"high"   },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"55% below 1990",note:"EU Green Deal aligned — Cyprus NDC 2021",             conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Tourism sector (~20% GDP) most at risk from heat/fire", conf:"low"  },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"High",          note:"Water scarcity compounds heat stress on agriculture", conf:"medium" },
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2023",  note:"Cyprus NAP 2023 — UNFCCC process",                    conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"55% below 1990 by 2030 — EU-aligned NDC 2021",       conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"EU-aligned",    note:"Part of EU adaptation monitoring framework",          conf:"high"   },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Partial (EU)",  note:"EU taxonomy partially applied — Cyprus Govt 2023",    conf:"medium" },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"0.6 /yr/1M",    note:"Low-moderate event rate; heat and drought dominant — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"High (heat)",   note:"2022 heat event 101 dead — highest per-event impact in dataset — Event Database", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Moderate",      note:"Drought–wildfire co-occurrence elevated — Eastern Mediterranean pattern — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"2.0× heat",     note:"Heat event frequency doubling — Mediterranean hotspot signal — Copernicus CCS", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.8°C anomaly; –15% precip",note:"1961–2020 — Cyprus Met Dept 2022; Mediterranean drying accelerating", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Very High",     note:"Desalination-dependent; freshwater resources near depletion — FAO AQUASTAT 2023", conf:"high" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~25%",          note:"Coastal and wildfire-prone terrain — GFDRR est.", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~30%",          note:"Tourism sector (~20% GDP) highly exposed to heat and drought — World Bank est.", conf:"medium" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~20%",          note:"Fire and flood corridor road network — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Moderate", note:"Power and water infrastructure in fire and drought zones — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~13.1%",        note:"EU-SILC 2022 — lower than regional average", conf:"high" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Moderate",      note:"Water scarcity constrains agriculture; high food import dependency — FAO FAOSTAT", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"6.2 per 1,000", note:"Physicians + nurses; EU-standard — WHO GHO 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.073",         note:"UNDP HDR 2023 — low gender inequality", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"78th pct",      note:"World Bank WGI 2023 — strong EU-aligned institutions", conf:"high" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"59/100",        note:"Transparency International 2023 — moderate risk", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~94%",          note:"Nearly fully import-dependent on fossil fuels — IEA 2023; high systemic exposure", conf:"high" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Low",           note:"Very high food import dependency; water scarcity compounds — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Operational",   note:"EU civil protection framework — Cyprus DDPM 2023 / Sendai Monitor", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"3/3",           note:"Platform, budget and mandate confirmed — EU alignment — UNDRR Sendai Monitor", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~40% GDP", note:"IMF WEO 2024 — EU member; access to European recovery funds", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Moderate-High", note:"Desalination active; EU-standard utilities — Cyprus Water Strategy 2023", conf:"high" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.8°C by 2050", note:"Eastern Mediterranean hotspot — 2–3× global average — IPCC AR6 / Copernicus", conf:"high" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"N/A",           note:"No glaciated terrain — excluded from composite", conf:"high" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.4%/yr",      note:"Forest and scrub degradation under drought — Hansen GFC 2023 / ESA CCI", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Very High",     note:"Freshwater –30%, crop yield –20%, energy import stress — all worsening by 2050", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Moderate",      note:"Destination country but climate-driven regional displacement pressure — IDMC est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"55% below 1990 target (EU)", note:"EU-aligned NDC; per capita still high — OWID / Cyprus NDC 2021", conf:"high" },
     ],
 
     policy: [
@@ -448,26 +526,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Hydrological:16, Geophysical:2, Meteorological:2 },
     narrative:"Georgia's hazard record is almost entirely hydrological with 15 of 20 events being floods. The 2015 Tbilisi floods (19 deaths, $30M loss) demonstrated how rapidly flash floods through mountain gorges can devastate an urban centre. The 2002 Tbilisi earthquake caused $180M in losses. Affected population figures near 9 million likely reflect national-level reporting. Climate projections point to increased precipitation variability -- wetter wet seasons amplifying flood frequency alongside long-term drying in eastern lowlands.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"50",            note:"17 of 20 events — one of the best data rates here",   conf:"high"   },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"9.09M",         note:"20 events — national-level reporting inflates figure", conf:"medium" },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$219M",         note:"5 of 20 events — 2002 EQ ($180M) dominates",          conf:"medium" },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"19 dead",       note:"2015 Tbilisi flash flood — IFRC",                     conf:"high"   },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Moderate",      note:"Urban gorge flood exposure — Tbilisi topography",     conf:"medium" },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"21.7%",         note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"16.4%",         note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Partial",       note:"River flood coverage — UNDP Georgia DRR 2023",        conf:"medium" },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.3°C",        note:"1961–2020 — Georgia Hydromet Dept 2022",              conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"Variable",      note:"Wetter west, drier east — Georgia Nat. Comm. 2022",   conf:"low"    },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.0°C",        note:"IPCC AR6 Caucasus region",                            conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+3.5°C",        note:"RCP8.5 — Georgia Nat. Comm.",                         conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"38,700 Gg CO₂eq",note:"1990 reference — Georgia NDC 2021",                 conf:"medium" },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"35% below 1990",note:"Conditional target — Georgia NDC 2021",               conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Not published in current Georgia NDC/NAP",            conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"High",          note:"Drought stress in eastern lowlands — Georgia NAP 2023", conf:"medium"},
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2023",  note:"Georgia NAP 2023 — UNFCCC / GCF support",             conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"35% below 1990 by 2030 — Georgia NDC 2021",           conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"In development",note:"Georgia NAP 2023 — monitoring framework pending",    conf:"medium" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Identified gap — Georgia NAP 2023",                 conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"1.6 /yr/1M",    note:"Events per 100yr window per million pop — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Moderate",      note:"2015 Tbilisi flood (19 dead, $30M) is benchmark event — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Low-Moderate",  note:"Flood–landslide co-occurrence in mountain gorges — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.2×",          note:"Flood frequency steady but intensifying — Event Database est.", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.3°C anomaly",note:"1961–2020 — Georgia Hydromet Dept 2022; precip variable", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Moderate",      note:"Kura-Araks transboundary pressure increasing — FAO AQUASTAT 2023", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~22%",          note:"Flood inundation zones + seismic exposure — Global Flood Database", conf:"medium" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~18%",          note:"Urban GDP in Tbilisi flood corridor — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~40%",          note:"Mountain road network exposed to landslide + flood corridors — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Moderate", note:"Tbilisi urban concentration in seismic and flood zones — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"21.7%",         note:"World Bank 2022", conf:"high" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Low-Moderate",  note:"Domestic production adequate; import dependency modest — FAO FAOSTAT 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"5.5 per 1,000", note:"Physicians + nurses — WHO GHO 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.331",         note:"UNDP HDR 2023 — moderate inequality", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"60th pct",      note:"World Bank WGI 2023 — functional institutions", conf:"high" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"55/100",        note:"Transparency International 2023 — improving trajectory", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~80%",          note:"Gas imports from Azerbaijan and Russia — IEA 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Moderate",      note:"Import dependency moderate; cereal yield stable — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"~72% (partial)", note:"River flood EWS partial — UNDP Georgia DRR 2023 / Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"3/3",           note:"Platform, budget and mandate all confirmed — UNDRR Sendai Monitor", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. 28% GDP",  note:"IMF WEO 2024 — reasonable recovery capacity", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Moderate",      note:"Urban flood infrastructure investment active in Tbilisi — EU-GEO 2023", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.1°C by 2050", note:"IPCC AR6 South Caucasus regional downscale — Copernicus CCS", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"Moderate risk", note:"Small Caucasus glaciers retreating; Kura-Araks low-flow risk — WGMS", conf:"low" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.3%/yr",      note:"Forest cover loss in eastern highlands — Hansen GFC 2023 est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Moderate",      note:"Crop yield –10–15% projected by 2050; water stress increasing — FAO/IPCC", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Low-Moderate",  note:"Climate displacement risk modest — IDMC 2030 projections", conf:"medium" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"35% below 1990 target", note:"Conditional NDC; hydro-dominant grid — OWID / Georgia NDC 2021", conf:"high" },
     ],
 
     policy: [
@@ -500,26 +591,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Meteorological:87, Hydrological:39, Biological:4, Geophysical:3 },
     narrative:"Kazakhstan's hazard profile is shaped by its vast steppe geography and continental climate extremes. Fires account for 83 of 133 recorded events, many affecting enormous grassland areas with limited response capacity. Flood risk concentrates in spring snowmelt events -- the 2024 Ural floods displaced over 100,000 people. The near-absence of economic loss data ($286K recorded) reflects collection gaps rather than low impact. Future risk is elevated by projected aridification and the loss of glacial water sources from the Tian Shan.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"297",           note:"18 of 129 nat. events — severe undercount",           conf:"low"    },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"1.05M",         note:"42 of 133 events — 2024 Ural floods dominate",        conf:"low"    },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"~$286K",        note:"8 events — extreme undercount, vast territory",        conf:"low"    },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"112 dead",      note:"1995 storm, Karaganda and Akmola — DesInventar",      conf:"medium" },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Steppe-limited", note:"Vast territory, sparse infrastructure coverage",     conf:"low"    },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"5.2%",          note:"World Bank 2022 — lower vulnerability",               conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"4.9%",          note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Partial",       note:"Spring melt flood coverage — UNDP Kazakhstan 2024",   conf:"medium" },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.7°C",        note:"1940–2020 — Kazakhstan Hydromet Service 2022",        conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"–5% (south)",   note:"Southern aridification accelerating — IPCC AR6",     conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+3.0°C",        note:"Continental amplification — IPCC AR6",                conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+5.5°C",        note:"RCP8.5 — Kazakhstan Nat. Comm.",                      conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"374,000 Gg CO₂eq",note:"1990 reference — Kazakhstan NDC 2021",             conf:"high"   },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"15% below 1990",note:"Unconditional; 25% conditional — Kazakhstan NDC 2021", conf:"high"  },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Not published in available NDC/NAP documents",        conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"High",          note:"Aridification and Tian Shan glacier retreat — KAZ NAP 2023", conf:"medium"},
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2023",  note:"Kazakhstan NAP 2023 — UNFCCC process",                conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"15–25% below 1990 by 2030 — Kazakhstan NDC 2021",     conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"In development",note:"Kazakhstan NAP 2023 — monitoring framework pending",  conf:"medium" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Not referenced in available documents",              conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"1.5 /yr/1M",    note:"Events per 100yr window per million pop; fires inflate count — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Low-Moderate",  note:"Individual event impact relatively low except 2024 Ural floods — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Low",           note:"Drought–fire co-occurrence in steppe; limited compound event record — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.3× fires",    note:"Wildfire frequency rising with aridification — Event Database / Copernicus", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.7°C anomaly",note:"1940–2020 continental amplification — Kazakhstan Hydromet Service 2022", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"High (south)",  note:"Aral Sea basin; Syr Darya severely over-allocated — FAO AQUASTAT 2023", conf:"high" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~22%",          note:"Flood plains + steppe fire zones; vast geography limits precision — GFDRR est.", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~20%",          note:"Oil sector + agriculture in hazard corridors — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~30%",          note:"Spring flood road corridors in northern oblasts — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Moderate", note:"Energy infrastructure in flood/fire zones — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~5.2%",         note:"World Bank 2022 — lower regional vulnerability", conf:"high" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Low-Moderate",  note:"Domestic cereal production adequate; drought risk to south — FAO FAOSTAT", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"6.8 per 1,000", note:"Physicians + nurses; above regional average — WHO GHO 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.197",         note:"UNDP HDR 2023 — moderate", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"55th pct",      note:"World Bank WGI 2023 — central government capacity functional", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"36/100",        note:"Transparency International 2023 — significant risk of diversion", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~5% (net exporter)", note:"Major oil/gas exporter; energy self-sufficient — IEA 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Moderate",      note:"Export-oriented grain sector; southern water dependency — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Partial",       note:"Spring snowmelt flood coverage exists; steppe fire EWS limited — UNDRR Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"2/3",           note:"Platform + strategy; local mandate weak — UNDRR Sendai Monitor 2023", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~22% GDP", note:"IMF WEO 2024 — oil revenue dependent; adequate in normal years", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Moderate",      note:"Urban-rural gap in infrastructure quality; steppe coverage limited — World Bank WDI", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+3.0°C by 2050", note:"Continental amplification — IPCC AR6 Central Asia", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"High — Tian Shan", note:"Tian Shan glacier retreat threatens Syr Darya dry-season flow — WGMS 2023", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.5%/yr",      note:"Steppe desertification + pasture degradation — Hansen GFC / ESA CCI", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"High",          note:"Crop yield –20% and runoff –25% projected by 2050 in south — FAO/IPCC/Aqueduct", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Moderate",      note:"South Kazakhstan climate displacement risk by 2050 — IDMC projections", conf:"low" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"374 Gg base; 15% ↓ target", note:"High per-capita emitter; oil-dependent trajectory — Kazakhstan NDC 2021 / OWID", conf:"high" },
     ],
 
     policy: [
@@ -552,26 +656,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Meteorological:61, Geophysical:18, Hydrological:14, Biological:3 },
     narrative:"Kosovo's disaster record reveals a significant data gap: zero economic losses are recorded across 96 events, reflecting systemic under-reporting rather than low impact. Storm events dominate by count (44), with landslides (17) and fires (16) as persistent secondary threats across the highland terrain. The 2012 Restelice landslide (10 deaths) and concurrent heat event (9 deaths) represent the worst natural hazard year on record. Institutional capacity for DRR remains limited relative to exposure.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"28",            note:"8 of 93 nat. events — very low coverage",             conf:"low"    },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"92K",           note:"81 of 96 events have affected data — better coverage", conf:"medium" },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$0",            note:"Data gap — zero recorded, not zero impact",           conf:"low"    },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"10 dead",       note:"2012 Restelice landslide — DesInventar",              conf:"medium" },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Limited capacity",note:"DRR institutions underdeveloped relative to exposure", conf:"medium"},
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"17.6%",         note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"25.2%",         note:"World Bank 2022 — high vulnerability",                conf:"high"   },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Absent",        note:"Flash flood EWS absent — UNDP Kosovo 2024",           conf:"high"   },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.5°C",        note:"1961–2020 — Kosovo Hydrometeorological Institute",    conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"Increasingly intense",note:"Seasonal extremes — Western Balkans signal",   conf:"low"    },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.3°C",        note:"IPCC AR6 Western Balkans",                            conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+4.2°C",        note:"RCP8.5 — IPCC AR6 Western Balkans",                  conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"Not submitted",  note:"Kosovo has not submitted NDC to UNFCCC",             conf:"high"   },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"Not submitted",  note:"UNFCCC registry — no NDC on file",                   conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified", note:"No NDC/NAP quantification available",                conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"High",          note:"Flash flood and drought risk to food systems",        conf:"medium" },
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Not adopted",   note:"No formal NAP — Kosovo DRR Framework 2023 draft only", conf:"high"  },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Not submitted",  note:"UNFCCC registry — not yet submitted",                conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"Absent",        note:"No framework exists — critical institutional gap",    conf:"high"   },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Not referenced in available documents",              conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"2.8 /yr/1M",    note:"96 events over period; storm events dominate count — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Low-Moderate",  note:"Low death count per event; data gaps limit severity assessment — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Moderate",      note:"Storm–landslide co-occurrence in highland terrain — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.4× storms",   note:"Storm and fire frequency rising since 2000 — Event Database est.", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.5°C anomaly",note:"1961–2020 — Kosovo Hydrometeorological Institute", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Moderate",      note:"Drin/White Drin basin; seasonal stress increasing — FAO AQUASTAT est.", conf:"low" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~35%",          note:"Flood plains + highland landslide terrain — GFDRR est.", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~30%",          note:"Agricultural and energy GDP in hazard corridors — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~45%",          note:"Mountain road network in landslide and flood zones — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Moderate", note:"Kosovo-B power plant in flood zone — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"17.6%",         note:"World Bank 2022 — amplifies disaster vulnerability", conf:"high" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Moderate",      note:"Import dependency; flash flood risk to agriculture — FAO FAOSTAT est.", conf:"low" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"2.8 per 1,000", note:"Physicians + nurses; limited capacity — WHO GHO 2023 est.", conf:"low" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.244",         note:"UNDP HDR 2023 est. — moderate", conf:"low" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"35th pct",      note:"World Bank WGI 2023 — limited institutional DRR capacity", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"42/100",        note:"Transparency International 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~60% coal-based",note:"Kosovo-B dominant; coal dependency with import exposure — IEA est.", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Low",           note:"High import dependency; no food system resilience framework — World Bank WDI", conf:"low" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Absent",        note:"Flash flood EWS absent — UNDP Kosovo 2024 — critical gap", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"0/3",           note:"No confirmed platform, budget or mandate — UNDRR Sendai Monitor", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~26% GDP", note:"IMF WEO 2024 — constrained; diaspora-dependent economy", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Low",           note:"Critical infrastructure gaps; DRR investment absent — UNDP Kosovo 2024", conf:"high" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.3°C by 2050", note:"IPCC AR6 Western Balkans regional projection", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"N/A",           note:"No glaciated terrain — excluded from composite", conf:"high" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.6%/yr",      note:"Forest cover loss — deforestation pressure — Hansen GFC 2023 est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Moderate-High", note:"Crop yield –15% and water stress increasing by 2050 — FAO/IPCC est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Moderate",      note:"Climate and economic out-migration overlapping — IDMC est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"No NDC submitted", note:"Not submitted to UNFCCC — emissions from coal dominant — OWID est.", conf:"medium" },
     ],
 
     policy: [
@@ -604,26 +721,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Meteorological:18, Hydrological:3, Biological:1 },
     narrative:"Moldova stands out in this dataset for relatively good economic loss documentation -- $2.18 billion recorded across 12 events, making it one of the better-evidenced countries. Floods along the Prut and Dniester rivers are the acute threat. Droughts are the persistent slow-onset risk: five recorded events between 1994 and 2020 consistently affect agricultural production. The 2007 heat event killed 146 people. Moldova's landlocked geography and rain-fed agriculture make it particularly exposed to the drying and temperature-rise trajectory projected for Eastern Europe.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"193",           note:"Best economic loss data in dataset — death data sparse", conf:"medium"},
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"~900K",         note:"12 events with data — 2010 Prut floods (500K) dominate", conf:"medium"},
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$2.18B",        note:"12 events — best economic loss coverage in dataset",   conf:"high"   },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"146 dead",      note:"2007 extreme heat event — EM-DAT",                    conf:"high"   },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Ageing Soviet stock",note:"Post-Soviet infrastructure — UNDP Moldova 2022",  conf:"medium" },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"27.0%",         note:"World Bank 2022 — high vulnerability",                conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"4.1%",          note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Active",        note:"Prut/Dniester river flood EWS — Moldova Hydromet 2023", conf:"high"  },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.4°C",        note:"1961–2020 — Moldova State Hydrometeorological Service", conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"–5% (variable)",note:"Increasing drought frequency — Moldova Nat. Comm.",   conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.0°C",        note:"IPCC AR6 Eastern Europe",                             conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+4.0°C",        note:"RCP8.5 — Moldova Nat. Comm.",                         conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"52,000 Gg CO₂eq",note:"1990 reference — Moldova NDC 2021",                 conf:"medium" },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"70% below 1990",note:"Conditional — Moldova NDC 2021 (most ambitious in region)", conf:"high"},
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Not published in current Moldova NDC/NAP",            conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"Critical",      note:"Drought-prone country — dominant economic sector",    conf:"high"   },
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2022",  note:"Moldova NAP 2022 — GCF-UNDP support",                conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"70% below 1990 by 2030 — Moldova NDC 2021",          conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"In development",note:"Moldova NAP 2022 — monitoring framework planned",    conf:"medium" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Not referenced in available Moldova documents",      conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"1.1 /yr/1M",    note:"22 events over period; droughts and heat dominant — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"High",          note:"2007 heat (146 dead, $530M); 2010 Prut floods (500K affected) — Event Database", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Moderate",      note:"Drought–heat co-occurrence elevated — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.3×",          note:"Drought and heat frequency rising — Event Database / Copernicus", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.4°C anomaly",note:"1961–2020 — Moldova State Hydrometeorological Service; precip –5%", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Moderate-High", note:"Prut and Dniester seasonal stress; groundwater depletion — FAO AQUASTAT 2023", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~25%",          note:"Prut/Dniester floodplains; drought-exposed farmland — Global Flood Database", conf:"medium" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~35%",          note:"Agriculture ~12% GDP highly drought-exposed — World Bank est.", conf:"medium" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~30%",          note:"River corridor road network flood exposure — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Moderate", note:"Rural water and energy infrastructure in flood zones — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"27.0%",         note:"World Bank 2022 — high vulnerability; remittance-dependent", conf:"high" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"High",          note:"Drought-prone agriculture; dominant economic sector — FAO FAOSTAT 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"4.5 per 1,000", note:"Physicians + nurses — WHO GHO 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.218",         note:"UNDP HDR 2023 — moderate", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"42nd pct",      note:"World Bank WGI 2023 — improving but constrained capacity", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"42/100",        note:"Transparency International 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~85%",          note:"High gas import dependency — IEA 2023; systemic fragility", conf:"high" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Low",           note:"Rain-fed agriculture; high cereal import dependency — World Bank WDI / FAO", conf:"high" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Active (rivers)", note:"Prut/Dniester EWS operational — Moldova Hydromet 2023 / Sendai Monitor", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"3/3",           note:"Platform, budget and mandate confirmed — UNDRR Sendai Monitor 2023", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~32% GDP", note:"IMF WEO 2024 — constrained; significant aid dependence", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Low-Moderate",  note:"Post-Soviet ageing stock; flood protection partial — UNDP Moldova 2022", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.0°C by 2050", note:"IPCC AR6 Eastern Europe regional downscale — Moldova Nat. Comm.", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"N/A",           note:"No glaciated terrain — excluded from composite", conf:"high" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.4%/yr",      note:"Soil degradation and erosion on rain-fed farmland — Hansen GFC / ESA CCI", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"High",          note:"Crop yield –20%, runoff –15% projected by 2050 — FAO/IPCC/Aqueduct WRI", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Moderate-High", note:"Climate + economic out-migration overlapping — IDMC 2030 projections", conf:"medium" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"70% below 1990 target", note:"Most ambitious NDC in region; low emitter — OWID / Moldova NDC 2021", conf:"high" },
     ],
 
     policy: [
@@ -656,26 +786,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Hydrological:10, Meteorological:7, Biological:1 },
     narrative:"Montenegro has among the lowest compound risk scores in this dataset, reflecting its small size, moderate hazard exposure, and relatively intact natural systems including intact forest cover and Adriatic coastal resilience. Floods are the most frequent threat (10 events). Fires have increased in frequency as Mediterranean drying conditions extend northward. The near-zero economic loss data ($90 recorded) is a data gap rather than a reflection of actual impact.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"11",            note:"15 of 17 nat. events — among best coverage here",     conf:"medium" },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"44K",           note:"11 of 18 events — 2012 heat (20K) dominates",         conf:"medium" },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$90",           note:"1 event only — critical data gap",                    conf:"low"    },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"6 dead",        note:"1992 Podgorica/Kolasin floods — DesInventar",         conf:"high"   },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Moderate",      note:"Small state — more manageable infrastructure base",   conf:"medium" },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"21.1%",         note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"15.3%",         note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Partial",       note:"Limited coverage — Montenegro DRR Strategy 2020",     conf:"medium" },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.5°C",        note:"1961–2020 — Montenegro Hydromet Inst. 2022",          conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"–5% (south)",   note:"Mediterranean drying extending northward — IPCC AR6", conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.1°C",        note:"IPCC AR6 Western Balkans",                            conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+4.0°C",        note:"RCP8.5 — IPCC AR6 Western Balkans",                  conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"5,100 Gg CO₂eq",note:"1990 reference — Montenegro NDC 2021",               conf:"medium" },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"35% below 1990",note:"Unconditional — Montenegro NDC 2021",                conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Tourism (~25% GDP) most at risk from fire and flood",  conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"Moderate",      note:"Fire and drought risk — Montenegro NAP 2023",         conf:"medium" },
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2023",  note:"Montenegro NAP 2023 — UNFCCC process",               conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"35% below 1990 by 2030 — Montenegro NDC 2021",       conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"In development",note:"Montenegro NAP 2023 — monitoring framework planned", conf:"medium" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Identified gap — Montenegro NAP 2023",              conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"1.0 /yr/1M",    note:"Low-moderate event rate; floods and fires dominant — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Low-Moderate",  note:"Low recorded death counts; data gaps limit assessment — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Low-Moderate",  note:"Flood–fire co-occurrence possible in coastal terrain — Event Database est.", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.3× fires",    note:"Fire frequency rising under Mediterranean drying — Copernicus EFFIS", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.6°C anomaly",note:"1961–2020 — Montenegro Hydromet est. / IPCC AR6 Western Balkans", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Low-Moderate",  note:"Adequate freshwater supply; seasonal coastal drought stress — FAO AQUASTAT", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~28%",          note:"Coastal flood + fire zones; Skadar Lake basin — GFDRR est.", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~25%",          note:"Tourism (~25% GDP) exposed to fire and flood — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~35%",          note:"Coastal mountain road network in flood + fire zones — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Low-Moderate", note:"Limited critical infrastructure exposure — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~8%",           note:"World Bank 2022 est. — moderate", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Low-Moderate",  note:"High food import dependency but domestic production adequate — FAO FAOSTAT", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"3.4 per 1,000", note:"Physicians + nurses — WHO GHO 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.142",         note:"UNDP HDR 2023 — low", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"52nd pct",      note:"World Bank WGI 2023 — EU accession candidate; improving", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"46/100",        note:"Transparency International 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~50%",          note:"Hydro plus coal and gas imports — IEA 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Low-Moderate",  note:"High import dependency; fire and drought risk to agriculture — World Bank WDI", conf:"low" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Partial",       note:"Montenegro DRR Strategy 2020 — coverage expanding — Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"2/3",           note:"Platform and strategy confirmed; budget fragmented — UNDRR Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~44% GDP", note:"IMF WEO 2024 — moderate; tourism revenue volatile", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Moderate",      note:"44% renewable energy; coastal infrastructure investment — Montenegro Energy 2030", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.1°C by 2050", note:"IPCC AR6 Western Balkans regional downscale", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"N/A",           note:"No glaciated terrain — excluded from composite", conf:"high" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.3%/yr",      note:"Forest degradation under fire pressure — Hansen GFC 2023 / ESA CCI", conf:"low" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Moderate",      note:"Hydropower stress + agricultural drought by 2050 — FAO/IPCC/IEA", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Low",           note:"Small population; low climate displacement risk — IDMC est.", conf:"medium" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"35% below 1990 target", note:"Montenegro NDC 2021; 44% renewable energy — OWID", conf:"high" },
     ],
 
     policy: [
@@ -708,26 +851,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Hydrological:16, Meteorological:15, Geophysical:3, Biological:1 },
     narrative:"North Macedonia's disaster profile is shaped by flash flood exposure -- 16 hydrological events in 35 total, with the 2016 Skopje floods killing 22 people in a single afternoon event. The country sits at a seismic junction with three recorded earthquake events. Fires are increasing (11 events since 2000) under Mediterranean drying conditions. Skopje's Vardar river corridor and hillslope settlements combine high hazard exposure with limited drainage infrastructure.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"33",            note:"5 of 34 nat. events — low coverage",                  conf:"low"    },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"424K",          note:"23 of 34 nat. events — relatively good coverage",     conf:"medium" },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$13M",          note:"5 events — better than most Balkan states",           conf:"medium" },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"22 dead",       note:"2016 Skopje flash flood — IFRC",                      conf:"high"   },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Limited drainage",note:"Vardar corridor flash flood exposure — Skopje",     conf:"medium" },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"21.8%",         note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"14.4%",         note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Active",        note:"Flash flood EWS active — N.Macedonia NAP 2023",       conf:"medium" },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.6°C",        note:"1961–2020 — N.Macedonia Hydromet Inst. 2022",         conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"–8% (annual)",  note:"Mediterranean drying trend — IPCC AR6",              conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.3°C",        note:"IPCC AR6 Western Balkans",                            conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+4.5°C",        note:"RCP8.5 — IPCC AR6 Western Balkans",                  conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"16,300 Gg CO₂eq",note:"1990 reference — N.Macedonia NDC 2022",             conf:"medium" },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"51% below 1990",note:"Conditional — N.Macedonia NDC 2022",                 conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Not published in available NDC/NAP documents",        conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"High",          note:"Drought and heat stress — N.Macedonia NAP 2023",      conf:"medium" },
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2023",  note:"N.Macedonia NAP 2023 — UNFCCC process",              conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2022",  note:"51% below 1990 by 2030 — N.Macedonia NDC 2022",      conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"In development",note:"N.Macedonia NAP 2023 — monitoring framework planned",conf:"medium" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Identified gap — N.Macedonia NAP 2023",             conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"1.7 /yr/1M",    note:"35 events over period; floods and fires dominant — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Moderate-High", note:"2016 Skopje flash flood (22 dead) benchmark — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Moderate",      note:"Flood–fire co-occurrence elevated; Vardar basin — Event Database est.", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.4× fires",    note:"Fire frequency rising under Mediterranean drying — Copernicus EFFIS / Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.6°C anomaly; –8% precip",note:"1961–2020 — N.Macedonia Hydromet Inst. 2022", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Moderate",      note:"Vardar basin seasonal stress; increasing drought frequency — FAO AQUASTAT", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~30%",          note:"Vardar floodplain + seismic zones — Global Flood Database", conf:"medium" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~25%",          note:"Industry in Vardar corridor; agriculture in lowland zones — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~40%",          note:"Mountain and river corridor road network — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Moderate", note:"Skopje infrastructure in flood + seismic zones — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"21.8%",         note:"World Bank 2022", conf:"high" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Moderate",      note:"Drought and flood risk to agriculture — FAO FAOSTAT 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"3.0 per 1,000", note:"Physicians + nurses — WHO GHO 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.149",         note:"UNDP HDR 2023 — low", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"48th pct",      note:"World Bank WGI 2023 — EU candidate; moderate capacity", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"43/100",        note:"Transparency International 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~60%",          note:"Coal + gas imports — IEA 2023; transition in progress", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Moderate",      note:"Domestic production + imports; drought risk to yields — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Active (flash flood)", note:"Flash flood EWS active — N.Macedonia NAP 2023 / Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"2/3",           note:"Platform and strategy confirmed; budget limited — UNDRR Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~33% GDP", note:"IMF WEO 2024 — moderate capacity", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Low-Moderate",  note:"Limited drainage in Skopje urban corridor — UNDP MKD est.", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.3°C by 2050", note:"IPCC AR6 Western Balkans regional downscale", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"N/A",           note:"No glaciated terrain — excluded from composite", conf:"high" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.5%/yr",      note:"Forest cover loss + fire damage — Hansen GFC 2023 / ESA CCI", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Moderate-High", note:"Crop yield –15% and water stress increasing by 2050 — FAO/IPCC/Aqueduct", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Moderate",      note:"Economic + climate out-migration overlapping — IDMC est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"43% below 1990 target", note:"NDC adopted; coal-dependent base — OWID / N.Macedonia NDC 2021", conf:"medium" },
     ],
 
     policy: [
@@ -760,26 +916,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Meteorological:17, Hydrological:14, Biological:2 },
     narrative:"This dataset covers natural hazards only and predates the 2022 Russian invasion, which caused infrastructure damage exceeding $150 billion. Within the natural hazard record, extreme heat is the dominant killer: twin heat waves in 2006 caused 919 deaths. Vulnerability is scored higher than natural hazard frequency alone would suggest because conflict damage to heating systems, water infrastructure and evacuation capacity means current resilience is substantially below any pre-2022 baseline. Any risk assessment for Ukraine must be read alongside conflict impact data.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"1,369",         note:"18 of 31 nat. events — reasonable coverage",          conf:"medium" },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"2.15M",         note:"20 of 33 events — Carpathian floods dominate",        conf:"medium" },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$1.68B",        note:"6 events — reasonable coverage for region",           conf:"medium" },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"919 dead",      note:"2006 twin heat waves — EM-DAT",                       conf:"high"   },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Conflict-damaged",note:"Heating, water, evacuation degraded — UNDP Ukraine 2024", conf:"high"},
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"Not reliable",  note:"Pre-2022 data — conflict has dramatically altered",   conf:"low"    },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"Not reliable",  note:"Pre-2022 data — conflict-affected economy",           conf:"low"    },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Conflict-affected",note:"Pre-2022 capacity substantially degraded",         conf:"low"    },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.3°C",        note:"1961–2020 — Ukraine Hydromet Centre 2022",            conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"Increasing intensity",note:"Extreme events more frequent — IPCC AR6",      conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+2.2°C",        note:"IPCC AR6 Eastern Europe",                             conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+4.5°C",        note:"RCP8.5 — IPCC AR6 Eastern Europe",                   conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"944,000 Gg CO₂eq",note:"1990 reference — Ukraine NDC 2021",                conf:"high"   },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"65% below 1990",note:"Conditional — Ukraine NDC 2021",                      conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Conflict impact ($150B+) dominates over climate",     conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"Critical",      note:"Breadbasket nation — heat and drought risk compound conflict", conf:"medium"},
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Conflict-affected",note:"NAP process disrupted — Ukraine DRR Strategy 2019", conf:"low"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"65% below 1990 by 2030 — Ukraine NDC 2021",          conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"Conflict-affected",note:"Pre-2022 system substantially disrupted",          conf:"low"    },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Disrupted by conflict — priority for recovery phase", conf:"low"   },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"0.8 /yr/1M",    note:"Moderate natural hazard frequency; flood + drought dominant — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Moderate",      note:"Chronic agricultural drought; flood events moderate severity — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Low-Moderate",  note:"Drought–heat co-occurrence in steppe zone — Event Database est.", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.2×",          note:"Heat and drought frequency rising — Copernicus / Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.4°C anomaly",note:"1961–2020 — Ukraine Hydromet Service; precip variable by region", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Moderate",      note:"Dnieper and Donets seasonal stress; war-related infrastructure damage compounds — FAO AQUASTAT", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~20%",          note:"Dnieper floodplain + steppe drought zone — Global Flood Database", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~30%",          note:"Agricultural sector (~10% GDP) highly drought-exposed — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~25%",          note:"River corridor road network flood exposure — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Elevated (war)", note:"War-damaged infrastructure dramatically increases disaster exposure — UNDP Ukraine 2024", conf:"high" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~5% pre-war",   note:"World Bank est. — war has significantly worsened vulnerability since 2022", conf:"low" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Severe (war)",  note:"Global breadbasket disrupted; domestic food insecurity elevated — FAO 2024", conf:"high" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"3.6 per 1,000", note:"Physicians + nurses; pre-war figure — WHO GHO 2023; war has degraded capacity", conf:"low" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.227",         note:"UNDP HDR 2023 pre-war est.", conf:"medium" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"40th pct (pre-war)", note:"World Bank WGI 2022 — institutional capacity severely disrupted by conflict", conf:"low" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"33/100",        note:"Transparency International 2023 — improving pre-war but significant risk", conf:"medium" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"High (post-war)", note:"War disruption to domestic energy production — IEA 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Disrupted",     note:"Major grain exporter; domestic supply chains fragmented by conflict — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Disrupted",     note:"War has severely degraded EWS infrastructure — UNDRR est. 2024", conf:"low" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"1/3",           note:"Platform exists; budget and mandate under war conditions — UNDRR Sendai Monitor", conf:"low" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Severely constrained", note:"IMF WEO 2024 — massive war spending; international aid dependent", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Very Low",      note:"War damage to power, water, and transport — UNDP Ukraine Needs Assessment 2024", conf:"high" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.0°C by 2050", note:"IPCC AR6 Eastern Europe regional downscale — Ukraine Nat. Comm.", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"N/A",           note:"No glaciated terrain — excluded from composite", conf:"high" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.5%/yr",      note:"War damage + agricultural degradation — Hansen GFC / ESA CCI 2023 est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Very High",     note:"War damage compounds climate stress; crop yield –15% and water scarcity by 2050", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Very High",     note:"Largest displacement crisis in Europe; climate compounds conflict drivers — IDMC 2024", conf:"high" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"65% below 1990 target", note:"NDC adopted; emissions falling due to war disruption — OWID / Ukraine NDC 2021", conf:"low" },
     ],
 
     policy: [
@@ -813,26 +982,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Hydrological:12, Meteorological:9, Geophysical:6, Biological:2 },
     narrative:"Uzbekistan's hazard record spans over a century with the 1902 earthquake (4,500 deaths) as the defining historical event. But the most significant vulnerability driver is outside this dataset entirely: the collapse of the Aral Sea has degraded agricultural systems, created toxic dust storm hazards, and left 60,000 km2 of exposed seabed. Future risk is high -- projected temperature increases of 3-4C by 2050, 30% water deficit from glacier retreat, and crop yield losses that threaten food systems for 35 million people.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"4,675",         note:"13 of 27 nat. events — 1902 EQ (4,500) dominates",    conf:"low"    },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"822K",          note:"9 of 29 events — low coverage",                       conf:"low"    },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$391M",         note:"2 events — extreme undercount",                        conf:"low"    },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"4,500 dead",    note:"1902 earthquake — USGS/EM-DAT",                       conf:"medium" },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Soviet-era irrigation",note:"Ferghana Valley decay — UNDP Uzbekistan 2022", conf:"medium" },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"16.8%",         note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"9.0%",          note:"World Bank 2022",                                     conf:"high"   },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Partial",       note:"UNDP Uzbekistan DRR 2023 — limited coverage",         conf:"medium" },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.8°C",        note:"1940–2020 — Uzbekistan Hydromet Centre 2022",         conf:"medium" },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"–10% (arid zones)",note:"Aridification accelerating — IPCC AR6",            conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+3.5°C",        note:"Continental amplification — IPCC AR6",                conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+6.0°C",        note:"RCP8.5 — Uzbekistan Nat. Comm.",                      conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"211,000 Gg CO₂eq",note:"1990 reference — Uzbekistan NDC 2021",             conf:"medium" },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"35% below 1990",note:"Unconditional — Uzbekistan NDC 2021",                 conf:"high"   },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Aral Sea collapse costs ongoing but unquantified",    conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"Critical",      note:"35M people — glacier retreat + aridification threat",  conf:"high"   },
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Adopted 2022",  note:"Uzbekistan NAP 2022 — UNFCCC process",                conf:"high"   },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Adopted 2021",  note:"35% below 1990 by 2030 — Uzbekistan NDC 2021",        conf:"high"   },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"In development",note:"Uzbekistan NAP 2022 — monitoring framework planned",  conf:"medium" },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Not implemented",note:"Not referenced in available documents",              conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"1.2 /yr/1M",    note:"Events per 100yr window per million pop — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Moderate-High", note:"1966 Tashkent earthquake (113K affected) benchmark — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Moderate",      note:"Drought–heat co-occurrence elevated in Aral Sea basin — Event Database est.", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.3×",          note:"Heat and drought frequency rising under continental warming — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.5°C anomaly",note:"1961–2020 — Uzbekistan Hydromet Service; Aral Sea desiccation driver", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Very High",     note:"Amu Darya and Syr Darya severely over-allocated; Aral Sea crisis — FAO AQUASTAT", conf:"high" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~40%",          note:"Fergana Valley flood + seismic zones; Aral Sea dust exposure — GFDRR est.", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~35%",          note:"Agriculture (~25% GDP) in irrigation-dependent zones — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~35%",          note:"Fergana corridor roads in flood and seismic zones — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Moderate-High", note:"Irrigation infrastructure in drought and seismic zones — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~9.5%",         note:"World Bank 2022", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Moderate-High", note:"Water-intensive agriculture highly exposed to Aral Sea crisis — FAO FAOSTAT", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"2.8 per 1,000", note:"Physicians + nurses — WHO GHO 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.243",         note:"UNDP HDR 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"28th pct",      note:"World Bank WGI 2023 — limited institutional transparency", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"33/100",        note:"Transparency International 2023 — significant risk", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~15% (net exporter)", note:"Gas exporter but energy infrastructure aged — IEA 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Low",           note:"Irrigation-dependent; water deficit critical — World Bank WDI / FAO FAOSTAT", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Partial",       note:"Limited national coverage; improving — UNDRR Sendai Monitor 2023", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"2/3",           note:"Platform and strategy exist; mandate and budget limited — UNDRR Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~30% GDP", note:"IMF WEO 2024 — moderate; gas revenue improving fiscal position", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Low",           note:"Aged Soviet-era irrigation and urban infrastructure — World Bank WDI", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.8°C by 2050", note:"IPCC AR6 Central Asia — continental amplification", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"High — Pamir/Tian Shan", note:"Upstream glacier retreat threatens Amu Darya/Syr Darya flow — WGMS 2023", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.7%/yr",      note:"Aral Sea basin desertification + salinisation — Hansen GFC / ESA CCI", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Very High",     note:"Crop yield –30%, runoff –25%, hydropower at risk by 2050 — FAO/IPCC/IEA", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"High",          note:"Aral Sea region depopulation + climate displacement — IDMC 2030 projections", conf:"medium" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"35% below 1990; trajectory ↑", note:"High per-capita; emissions rising with growth — OWID / Uzbekistan NDC 2021", conf:"medium" },
     ],
 
     policy: [
@@ -864,26 +1046,39 @@ const COUNTRIES = {
     hazardBreakdown:{ Hydrological:10, Meteorological:9, Geophysical:7 },
     narrative:"Turkmenistan's disaster record is dominated by the 1948 Ashgabat earthquake (110,000 deaths -- one of the deadliest of the 20th century) and the 1929 Ashgabat earthquake (3,257 deaths). Outside these seismic catastrophes the contemporary picture is storms and floods, but data availability is severely constrained by political opacity. Vulnerability is scored high because critical infrastructure is opaque to external assessment. Future risk is driven by extreme aridification threatening the already water-stressed Amu Darya basin.",
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",           val:"113,298",       note:"1948 Ashgabat EQ (110K) dominates — USGS/EM-DAT",     conf:"medium" },
-      { group:"Disaster Record",    label:"People affected (partial)",           val:"176K",          note:"2 of 26 events — extreme undercount due to opacity",  conf:"low"    },
-      { group:"Disaster Record",    label:"Recorded economic losses",            val:"$45M",          note:"2 events — political opacity limits data",            conf:"low"    },
-      { group:"Disaster Record",    label:"Deadliest single event",              val:"110,000 dead",  note:"1948 Ashgabat earthquake — 20th century's deadliest",  conf:"high"   },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",   val:"Opaque",        note:"International assessment restricted — critical gap",  conf:"low"    },
-      { group:"Infrastructure",     label:"Population below poverty line",       val:"Not available",  note:"Political opacity — World Bank data restricted",     conf:"low"    },
-      { group:"Infrastructure",     label:"Unemployment rate",                   val:"Not available",  note:"Official data not published — UNDP 2023",           conf:"low"    },
-      { group:"Infrastructure",     label:"Early warning system status",         val:"Unknown",       note:"No international assessment available — UNDRR 2023",  conf:"low"    },
-      { group:"Climate & Future",   label:"Observed temperature rise",           val:"+1.9°C",        note:"1940–2020 — Central Asian regional estimate",         conf:"low"    },
-      { group:"Climate & Future",   label:"Observed precipitation change",       val:"–15% (trend)",  note:"Arid zone — extreme drying projected — IPCC AR6",    conf:"low"    },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",         val:"+3.8°C",        note:"Continental arid amplification — IPCC AR6",           conf:"low"    },
-      { group:"Climate & Future",   label:"Projected temp rise by 2100",         val:"+6.0°C",        note:"RCP8.5 — among highest in dataset",                   conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC emissions baseline (1990)",       val:"Not quantified",note:"NDC submitted 2022 — no quantified baseline",         conf:"low"    },
-      { group:"Economic Exposure",  label:"NDC 2030 emissions target",           val:"No numeric target",note:"Turkmenistan NDC 2022 — qualitative only",         conf:"medium" },
-      { group:"Economic Exposure",  label:"GDP loss without climate action",     val:"Not quantified",note:"Political opacity limits all economic assessment",    conf:"low"    },
-      { group:"Economic Exposure",  label:"Agriculture sector exposure",         val:"Critical",      note:"Amu Darya water stress — irrigation-dependent economy", conf:"medium"},
-      { group:"Governance & Capacity", label:"NAP status",                       val:"Not publicly available",note:"No NAP on UNFCCC registry — UNDRR 2023",      conf:"low"    },
-      { group:"Governance & Capacity", label:"NDC status",                       val:"Submitted 2022",note:"No quantified targets — Turkmenistan NDC 2022",       conf:"medium" },
-      { group:"Governance & Capacity", label:"Adaptation M&E system",            val:"Unknown",       note:"No international assessment available",               conf:"low"    },
-      { group:"Governance & Capacity", label:"Climate budget tagging",           val:"Unknown",       note:"Political opacity limits assessment",                  conf:"low"    },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"0.4 /yr/1M",    note:"Very low recorded event rate; data severely incomplete — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Extreme (historical)", note:"1948 Ashgabat earthquake: 110K–120K dead — deadliest in dataset — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Low-Moderate",  note:"Drought–heat co-occurrence elevated; limited event record — Event Database est.", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"Unknown",       note:"Sparse event record prevents reliable trend calculation — Event Database", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.8°C anomaly",note:"1961–2020 — Turkmenistan Hydromet est.; extreme heat increasing", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Extreme",       note:"Amu Darya nearly dry at delta; Aral Sea collapse — FAO AQUASTAT 2023", conf:"high" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~45%",          note:"Seismic active zones + drought/heat exposed territory — GFDRR est.", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~20%",          note:"Gas sector dominates; agriculture exposed to drought — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~30%",          note:"Desert corridor roads in seismic and heat zones — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"High (seismic)", note:"Major infrastructure in Ashgabat seismic zone — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~10% est.",     note:"World Bank est. — data opacity makes precise estimation difficult", conf:"low" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Moderate-High", note:"Water-scarce agriculture; high food import dependency — FAO FAOSTAT est.", conf:"low" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"2.2 per 1,000 est.", note:"Physicians + nurses; very limited external verification — WHO GHO est.", conf:"low" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.306 est.",    note:"UNDP HDR est. — significant inequality limiting adaptive agency", conf:"low" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"5th pct",       note:"World Bank WGI 2023 — authoritarian system; very limited institutional transparency", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"18/100",        note:"Transparency International 2023 — extreme corruption risk; 4th lowest globally", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"Net exporter (gas)", note:"Massive gas reserves; but domestic delivery infrastructure fragile — IEA 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Very Low",      note:"Irrigation agriculture near collapse in Amu Darya delta — World Bank WDI / FAO", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Unknown",       note:"No verifiable EWS data — Sendai Monitor: no submission; data opacity — UNDRR", conf:"low" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"0/3",           note:"No confirmed platform, budget or mandate in public domain — UNDRR Sendai Monitor", conf:"low" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Unknown",       note:"IMF WEO: data limited — gas revenue likely adequate but opaque — est.", conf:"low" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Low est.",      note:"Soviet-era infrastructure; no public reporting — World Bank WDI est.", conf:"low" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+3.2°C by 2050 est.", note:"IPCC AR6 Central Asia — extreme continental amplification", conf:"low" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"High — upstream", note:"Upstream Pamir/Tian Shan glacier retreat threatens Amu Darya — WGMS 2023", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~1.2%/yr",      note:"Aral Sea desertification among worst globally — Hansen GFC / ESA CCI", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Extreme",       note:"Water collapse + crop yield –40% projected by 2050 — FAO/IPCC/Aqueduct WRI", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"High",          note:"Aral Sea basin depopulation ongoing; worsening — IDMC 2030 projections", conf:"medium" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"Very high; no NDC committed", note:"Among highest per-capita flaring globally — OWID / Global Carbon Project", conf:"medium" },
     ],
 
     policy: [
@@ -920,12 +1115,39 @@ const COUNTRIES = {
     narrative: "Albania faces a classic coastal-mountain risk profile where winter river floods and shallow earthquakes intersect with dense urban growth in floodplains. Recurrent Drin and Vjosa basin floods have displaced tens of thousands of people since the 1990s, while seismic risk remains elevated around Tirana and Durres. Ageing water, energy and road infrastructure amplify even moderate events, and future sea‑level rise plus more intense rainfall could significantly increase annual losses without proactive adaptation.",
 
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",       val:"420",      note:"14 of 32 events — mixed hydrological and seismic record", conf:"low" },
-      { group:"Disaster Record",    label:"People affected (partial)",       val:"520K",     note:"18 of 32 events — concentrated in major river basins",    conf:"low" },
-      { group:"Disaster Record",    label:"Recorded economic losses",        val:"$320M",    note:"7 of 32 events — likely undercount of local impacts",     conf:"low" },
-      { group:"Infrastructure",     label:"Critical infrastructure condition",val:"Worn",    note:"Legacy Soviet‑era networks under stress",                 conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050",     val:"+2.3°C",   note:"Indicative regional projection — mock data",              conf:"low" },
-      { group:"Governance & Capacity", label:"NAP status",                   val:"Draft",    note:"Adaptation planning in development — mock",               conf:"low" },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"1.8 /yr/1M",    note:"Floods + earthquakes dominant — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Moderate-High", note:"2019 Durrës earthquake ($1B+ losses) sets benchmark — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Moderate",      note:"Flood–landslide co-occurrence in Drin and Vjosa basins — Event Database est.", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.2×",          note:"Flood frequency steady but intensity increasing — Event Database / Copernicus", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.4°C anomaly",note:"1961–2020 — Albania Hydromet est. / IPCC AR6 Western Balkans", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Moderate",      note:"Drin and Vjosa seasonal stress; increasing drought frequency — FAO AQUASTAT", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~40%",          note:"Drin/Vjosa floodplains + seismic active zones — GFDRR est.", conf:"low" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~35%",          note:"Tourism + agriculture in coastal flood + seismic zones — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~45%",          note:"River corridor and coastal road network — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"High",  note:"Durrës port and Tirana urban infrastructure in seismic + flood zones — GFDRR", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~12% est.",     note:"World Bank 2022 est. — moderate vulnerability", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Moderate",      note:"Flood and drought risk to agriculture — FAO FAOSTAT 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"3.5 per 1,000 est.", note:"Physicians + nurses — WHO GHO 2023 est.", conf:"low" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.181",         note:"UNDP HDR 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"48th pct",      note:"World Bank WGI 2023 — EU candidate; improving", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"37/100",        note:"Transparency International 2023 — significant risk", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~40%",          note:"Hydro-dominant but gas and oil imports — IEA 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Moderate",      note:"Import dependency moderate; flood risk to coastal agriculture — World Bank WDI", conf:"low" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Partial",       note:"Flood EWS in place; expanding — Albania DRR Strategy / Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"2/3",           note:"Platform and strategy confirmed; mandate scope limited — UNDRR Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~28% GDP", note:"IMF WEO 2024 — moderate; EU accession driving investment", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Moderate",      note:"Legacy infrastructure; EU-funded flood protection improving — World Bank WDI", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.3°C by 2050", note:"IPCC AR6 Western Balkans regional downscale", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"N/A",           note:"No glaciated terrain — excluded from composite", conf:"high" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.4%/yr",      note:"Forest + riparian degradation — Hansen GFC 2023 / ESA CCI est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Moderate",      note:"Crop yield –12% and hydropower stress by 2050 — FAO/IPCC/IEA est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Moderate",      note:"Economic + climate out-migration overlapping — IDMC est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"NDC in development", note:"EU alignment target; low absolute emitter — OWID / Albania NDC 2022", conf:"medium" },
     ],
 
     policy: [
@@ -955,11 +1177,39 @@ const COUNTRIES = {
     narrative: "Serbia’s risk profile is dominated by the Sava–Danube river system, where large‑scale floods periodically affect Belgrade and northern municipalities. The 2014 floods remain the benchmark loss event, but smaller annual floods, heatwaves and winter storms steadily erode infrastructure and household resilience. Climate projections suggest more intense rainfall events and hotter, drier summers, increasing both flood and heat‑related health risks.",
 
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",   val:"310",    note:"10 of 28 events — flood and heat events dominate",   conf:"low" },
-      { group:"Disaster Record",    label:"People affected (partial)",   val:"760K",   note:"16 of 28 events — includes 2014 mega‑flood",         conf:"low" },
-      { group:"Infrastructure",     label:"Critical infrastructure",     val:"Ageing", note:"Key transport and energy assets exposed to floods",  conf:"medium" },
-      { group:"Climate & Future",   label:"Heatwave frequency",          val:"Rising", note:"Mock upward trend in multi‑day heat events",        conf:"low" },
-      { group:"Governance & Capacity", label:"DRR coordination",         val:"Partial",note:"National framework in place, local gaps (mock)",   conf:"low" },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"1.3 /yr/1M",    note:"Floods + heat dominant — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"High",          note:"2014 Sava–Danube floods ($1.4B, 57 dead) benchmark — Event Database", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"Moderate",      note:"Flood–drought co-occurrence emerging in Morava basin — Event Database est.", conf:"low" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.3×",          note:"Heat frequency rising; flood events concentrated — Event Database / Copernicus", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.5°C anomaly",note:"1961–2020 — Serbia Hydromet Service; precipitation increasingly variable", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"Moderate",      note:"Sava/Danube flow adequate; Morava basin seasonally stressed — FAO AQUASTAT", conf:"medium" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~28%",          note:"Sava–Danube floodplain + Morava basin — Global Flood Database", conf:"medium" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~25%",          note:"Industry in river corridors; agriculture in floodplains — World Bank est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~30%",          note:"River corridor road network flood exposure — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Moderate-High", note:"Belgrade energy and water infrastructure in flood zone — GFDRR est.", conf:"low" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~7% est.",      note:"World Bank 2022 est. — moderate", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Low-Moderate",  note:"Domestic production adequate; drought stress increasing — FAO FAOSTAT 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"3.2 per 1,000", note:"Physicians + nurses — WHO GHO 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.217",         note:"UNDP HDR 2023", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"50th pct",      note:"World Bank WGI 2023 — EU candidate; moderate institutional capacity", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"36/100",        note:"Transparency International 2023 — significant risk", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~55%",          note:"Coal + gas imports; transition in progress — IEA 2023", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Moderate",      note:"Grain exporter; domestic supply robust; drought risk increasing — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Active (floods)", note:"Flood risk management plan post-2014; EWS operational — Serbia MES / Sendai Monitor", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"3/3",           note:"Platform, budget and mandate confirmed — UNDRR Sendai Monitor 2023", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~40% GDP", note:"IMF WEO 2024 — moderate recovery capacity", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Moderate",      note:"Post-2014 flood protection investment; urban heat plans piloting — UNDP SRB", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.2°C by 2050", note:"IPCC AR6 Western Balkans regional downscale", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"N/A",           note:"No glaciated terrain — excluded from composite", conf:"high" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.3%/yr",      note:"Forest cover stable; riparian zone degradation — Hansen GFC 2023 est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"Moderate",      note:"Crop yield –10% and hydropower stress projected by 2050 — FAO/IPCC/IEA", conf:"low" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"Moderate",      note:"Economic + climate out-migration overlapping — IDMC est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"~33% below 1990 target", note:"NDC adopted; coal-dependent — OWID / Serbia NDC 2021", conf:"medium" },
     ],
 
     policy: [
@@ -988,11 +1238,39 @@ const COUNTRIES = {
     narrative: "Türkiye combines one of the world’s highest seismic risk corridors with rapidly growing coastal and metropolitan exposure along the Marmara, Aegean and Mediterranean. Catastrophic earthquakes set the upper bound of recorded losses, while recurrent river and flash floods, wildfires and heatwaves place chronic pressure on local systems. Future climate signals point to hotter summers, higher fire weather risk and more intense rainfall events, particularly in urban areas with limited drainage capacity.",
 
     indicators: [
-      { group:"Disaster Record",    label:"Recorded deaths (partial)",   val:"32,000", note:"Dominated by major earthquake sequences — mock",   conf:"low" },
-      { group:"Disaster Record",    label:"People affected (partial)",   val:"5.2M",   note:"30 of 60 events — earthquakes and floods",        conf:"low" },
-      { group:"Infrastructure",     label:"Critical infrastructure",     val:"Mixed",  note:"Modern assets co‑exist with vulnerable stock",    conf:"medium" },
-      { group:"Climate & Future",   label:"Projected temp rise by 2050", val:"+2.5°C", note:"Indicative regional projection — mock",           conf:"low" },
-      { group:"Governance & Capacity", label:"Seismic building code",    val:"Strengthened", note:"Progress after major quakes — mock",       conf:"medium" },
+      // HP · Hazard Pressure
+      { group:"HP · Hazard Pressure",   label:"Disaster frequency",              val:"3.5 /yr/1M",    note:"High event rate; earthquakes + floods + wildfires — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Severity index",                  val:"Very High",     note:"2023 Kahramanmaraş EQ (24K dead, $35B); compound multi-hazard — Event Database", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Compound hazard score",           val:"High",          note:"Earthquake–flood and drought–wildfire co-occurrence elevated — Event Database", conf:"medium" },
+      { group:"HP · Hazard Pressure",   label:"Trend acceleration",              val:"1.6× fire",     note:"Wildfire frequency and intensity rising steeply — Copernicus EFFIS", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Observed climate exposure",       val:"+1.4°C anomaly; –8% precip", note:"1961–2020 — Turkish Met Service; Mediterranean drying", conf:"high" },
+      { group:"HP · Hazard Pressure",   label:"Water stress",                    val:"High (south)",  note:"Tigris/Euphrates headwater stress; southeastern Turkey severe — FAO AQUASTAT", conf:"high" },
+      // EX · Exposure
+      { group:"EX · Exposure",          label:"Population in hazard zones",      val:"~45%",          note:"Marmara/Aegean seismic + coastal flood zones; 85M population — GFDRR", conf:"medium" },
+      { group:"EX · Exposure",          label:"GDP exposed",                     val:"~35%",          note:"Istanbul metro GDP in seismic zone; coastal tourism exposed — World Bank est.", conf:"medium" },
+      { group:"EX · Exposure",          label:"Roads in risk corridors",         val:"~40%",          note:"Seismic + flood corridor road network — UNDRR/ADB est.", conf:"low" },
+      { group:"EX · Exposure",          label:"Critical infrastructure in hazard zones", val:"Very High", note:"Istanbul critical infrastructure in highest seismic hazard zone — GFDRR", conf:"medium" },
+      // FR · Fragility
+      { group:"FR · Fragility",         label:"Poverty rate ($3.65/day)",        val:"~12% est.",     note:"World Bank 2022 est. — mixed economy; inequality high", conf:"medium" },
+      { group:"FR · Fragility",         label:"Food insecurity",                 val:"Moderate",      note:"Domestic production adequate; drought risk to southeastern agriculture — FAO", conf:"medium" },
+      { group:"FR · Fragility",         label:"Health system capacity",          val:"2.3 per 1,000", note:"Physicians + nurses — WHO GHO 2023; post-earthquake system strained", conf:"medium" },
+      { group:"FR · Fragility",         label:"Gender inequality index (GII)",   val:"0.301",         note:"UNDP HDR 2023 — moderately high", conf:"high" },
+      { group:"FR · Fragility",         label:"Governance effectiveness",        val:"55th pct",      note:"World Bank WGI 2023 — centralised coordination; seismic code enforcement improving", conf:"medium" },
+      { group:"FR · Fragility",         label:"Corruption perception (CPI)",     val:"34/100",        note:"Transparency International 2023 — significant risk", conf:"high" },
+      { group:"FR · Fragility",         label:"Energy import dependence",        val:"~75%",          note:"High fossil fuel import dependency — IEA 2023; systemic fragility", conf:"high" },
+      { group:"FR · Fragility",         label:"Food system resilience",          val:"Moderate",      note:"Significant agricultural sector; drought and heat stress increasing — World Bank WDI", conf:"medium" },
+      // AC · Adaptive Capacity
+      { group:"AC · Adaptive Capacity", label:"Early warning coverage",          val:"Operational",   note:"Multi-hazard EWS — AFAD; seismic + weather monitoring — Sendai Monitor", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"DRR institutional score",         val:"3/3",           note:"AFAD platform, dedicated budget and mandate confirmed — UNDRR Sendai Monitor", conf:"high" },
+      { group:"AC · Adaptive Capacity", label:"Fiscal space",                    val:"Rev. ~32% GDP", note:"IMF WEO 2024 — moderate; earthquake reconstruction spending constrained by inflation", conf:"medium" },
+      { group:"AC · Adaptive Capacity", label:"Infrastructure resilience",       val:"Mixed",         note:"Modern assets co-exist with vulnerable stock; post-2023 seismic retrofit scaling up", conf:"medium" },
+      // FS · Future Stress
+      { group:"FS · Future Stress",     label:"Climate warming trajectory (SSP4.5)", val:"+2.5°C by 2050", note:"IPCC AR6 Mediterranean/Eastern Europe — Turkish Met Service 2023", conf:"high" },
+      { group:"FS · Future Stress",     label:"Glacier & water system retreat",  val:"Moderate",      note:"Small Turkish glaciers retreating; Euphrates headwater flow reduction — WGMS est.", conf:"low" },
+      { group:"FS · Future Stress",     label:"Land degradation rate",           val:"~0.5%/yr",      note:"Forest + scrub degradation under fire pressure — Hansen GFC 2023 / ESA CCI", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Food–water–energy nexus stress",  val:"High",          note:"Crop yield –15%, water stress, wildfire risk all worsening by 2050 — FAO/IPCC/IEA", conf:"medium" },
+      { group:"FS · Future Stress",     label:"Migration pressure potential",    val:"High",          note:"Transit and destination country for climate-displaced populations — IDMC 2030", conf:"medium" },
+      { group:"FS · Future Stress",     label:"GHG emissions trajectory",        val:"21% below 1990; trajectory ↑", note:"High absolute emitter; NDC below ambition — OWID / Türkiye NDC 2021", conf:"high" },
     ],
 
     policy: [
@@ -1010,7 +1288,7 @@ const COUNTRIES = {
 };
 
 const CONF_COLOR = { high:C.good, medium:C.warn, low:C.bad };
-const IND_GROUPS = ["Disaster Record","Infrastructure","Climate & Future","Economic Exposure","Governance & Capacity"];
+const IND_GROUPS = ["HP · Hazard Pressure","EX · Exposure","FR · Fragility","AC · Adaptive Capacity","FS · Future Stress"];
 const POL_AREAS  = ["Disaster Risk","Climate","Adaptation"];
 
 // ─── SMALL ATOMS ─────────────────────────────────────────────────────────────
@@ -1500,11 +1778,11 @@ const ghostBtn={padding:"5px 11px",borderRadius:6,cursor:"pointer",fontSize:12,b
 // ─── INDICATORS ACCORDION ─────────────────────────────────────────────────────
 // Pillar → indicator group mapping
 const PILLAR_TO_GROUPS = {
-  hp: ["Disaster Record"],
-  ex: ["Disaster Record","Economic Exposure"],
-  fr: ["Infrastructure","Governance & Capacity"],
-  ac: ["Governance & Capacity"],
-  fs: ["Climate & Future"],
+  hp: ["HP · Hazard Pressure"],
+  ex: ["EX · Exposure"],
+  fr: ["FR · Fragility"],
+  ac: ["AC · Adaptive Capacity"],
+  fs: ["FS · Future Stress"],
 };
 
 function IndicatorsPanel({country, activePillar}){
@@ -1550,7 +1828,7 @@ function IndicatorsPanel({country, activePillar}){
           <div key={group} style={{borderRadius:8,overflow:"hidden",
             border:isPillarGroup?`1px solid ${pillar.color}40`:`1px solid ${C.border}`,
             transition:"border 0.2s"}}>
-            {(()=>{const GT={"Disaster Record":"Recorded deaths, affected people and economic losses. Coverage varies widely -- most events lack quantitative data.","Infrastructure":"Physical infrastructure condition and urban exposure factors that amplify disaster impact.","Climate & Future":"Projected changes in hazard frequency and intensity under climate scenarios to 2050.","Economic Exposure":"Economic vulnerability: GDP exposure, livelihood dependencies and recorded losses.","Governance & Capacity":"Status of national DRR/adaptation frameworks, early warning, planning processes and institutional gaps. Sourced from NDC, NAP and UNDP assessments."};return(
+            {(()=>{const GT={"HP · Hazard Pressure":"Frequency, intensity, compound likelihood and trend acceleration of hazard events. Observed climate exposure and water stress.","EX · Exposure":"Population and GDP in hazard-prone zones. Roads and critical infrastructure intersecting flood, seismic and landslide corridors.","FR · Fragility":"Failure probability across socioeconomic (poverty, food, health, gender), institutional (governance, corruption) and system (energy, food) dimensions.","AC · Adaptive Capacity":"Early warning coverage (CO-verified), DRR institutional score, fiscal space and infrastructure resilience.","FS · Future Stress":"Forward-looking indicators only: climate warming trajectory (IPCC AR6), glacier retreat, land degradation, food–water–energy nexus stress, migration pressure and GHG emissions trajectory."};return(
             <button onClick={()=>setOpen(isOpen?null:group)} title={GT[group]||""} style={{
               width:"100%",padding:"10px 14px",
               background:isOpen?(isPillarGroup?`${pillar?.color}12`:"rgba(255,255,255,0.055)"):(isPillarGroup?`${pillar?.color}06`:C.surface),
@@ -2008,7 +2286,7 @@ function CountryDetail({country, onClose, activePillar, onPillarChange}){
                 </div>
               </div>
 
-              <IndicatorsByGroup country={country} groups={["Disaster Record","Climate & Future"]}/>
+              <IndicatorsByGroup country={country} groups={["HP · Hazard Pressure"]}/>
               <div style={SL}>EVENT LOG</div>
               <EventLog country={country}/>
             </div>
@@ -2020,7 +2298,7 @@ function CountryDetail({country, onClose, activePillar, onPillarChange}){
               <div style={{fontSize:10,fontWeight:600,color:CRISP_PILLARS.find(p=>p.key==="ex").color,letterSpacing:"0.05em",textTransform:"uppercase"}}>
                 EX · Exposure — What's in harm's way
               </div>
-              <IndicatorsByGroup country={country} groups={["Economic Exposure","Infrastructure"]}/>
+              <IndicatorsByGroup country={country} groups={["EX · Exposure"]}/>
             </div>
           )}
 
@@ -2030,7 +2308,7 @@ function CountryDetail({country, onClose, activePillar, onPillarChange}){
               <div style={{fontSize:10,fontWeight:600,color:CRISP_PILLARS.find(p=>p.key==="fr").color,letterSpacing:"0.05em",textTransform:"uppercase"}}>
                 FR · Fragility — How likely systems break
               </div>
-              <IndicatorsByGroup country={country} groups={["Infrastructure","Governance & Capacity"]}/>
+              <IndicatorsByGroup country={country} groups={["FR · Fragility"]}/>
             </div>
           )}
 
@@ -2040,7 +2318,7 @@ function CountryDetail({country, onClose, activePillar, onPillarChange}){
               <div style={{fontSize:10,fontWeight:600,color:CRISP_PILLARS.find(p=>p.key==="ac").color,letterSpacing:"0.05em",textTransform:"uppercase"}}>
                 AC · Adaptive Capacity — Ability to respond and recover
               </div>
-              <IndicatorsByGroup country={country} groups={["Governance & Capacity","Infrastructure"]}/>
+              <IndicatorsByGroup country={country} groups={["AC · Adaptive Capacity"]}/>
             </div>
           )}
 
@@ -2053,7 +2331,7 @@ function CountryDetail({country, onClose, activePillar, onPillarChange}){
               <div style={{background:"rgba(184,134,11,0.06)",border:"1px solid rgba(184,134,11,0.18)",borderRadius:6,padding:"8px 11px",fontSize:10,color:"rgba(255,255,255,0.5)",fontStyle:"italic"}}>
                 All indicators in this pillar are forward-looking only. Observed trends are captured in HP.
               </div>
-              <IndicatorsByGroup country={country} groups={["Climate & Future","Economic Exposure"]}/>
+              <IndicatorsByGroup country={country} groups={["FS · Future Stress"]}/>
               <PolicyPanel country={country}/>
             </div>
           )}
