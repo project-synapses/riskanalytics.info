@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 
 // ─── PALETTE & CONSTANTS ─────────────────────────────────────────────────────
 const C = {
@@ -2203,8 +2203,447 @@ function CountrySidebar({country, activePillar, onPillarChange}){
   );
 }
 
+// ─── SIMULATION MODE (indicator sliders → pillar + composite) ─────────────
+function SimulationModePanel({country, onExit}){
+  const WHITE_BG = "#ffffff";
+  const TEXT_DARK = "#0b1220";
+  const MUTED = "#64748b";
+  const BORDER = "#e5e7eb";
+  const ROW_BORDER = "#eef2f7";
+  const CARD_SOFT = "#f8fafc";
+  const hexToRgba = (hex, alpha) => {
+    const clean = String(hex || "").replace("#", "");
+    if (clean.length !== 6) return `rgba(0,0,0,${alpha})`;
+    const r = parseInt(clean.slice(0, 2), 16);
+    const g = parseInt(clean.slice(2, 4), 16);
+    const b = parseInt(clean.slice(4, 6), 16);
+    return `rgba(${r},${g},${b},${alpha})`;
+  };
+
+  const PILLAR_GROUP = {
+    hp: "HP · Hazard Pressure",
+    ex: "EX · Exposure",
+    fr: "FR · Fragility",
+    ac: "AC · Adaptive Capacity",
+    fs: "FS · Future Stress",
+  };
+
+  const PILLAR_BY_GROUP = {
+    "HP · Hazard Pressure": "hp",
+    "EX · Exposure": "ex",
+    "FR · Fragility": "fr",
+    "AC · Adaptive Capacity": "ac",
+    "FS · Future Stress": "fs",
+  };
+
+  const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
+  const signFmt = (n) => `${n > 0 ? "+" : ""}${n}`;
+
+  // Dummy indicator baseline scoring mirrors the existing placeholder logic used in v20.
+  const getDummyScore = (ind) => {
+    const hash = ind.label.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const groupScores = {
+      "Disaster Record": [85, 74, 68, 82, 71],
+      "Infrastructure": [79, 65, 58, 72, 61],
+      "Climate & Future": [88, 76, 83, 91, 68],
+      "Economic Exposure": [73, 69, 77, 64, 70],
+      "Governance & Capacity": [55, 62, 48, 59, 51],
+    };
+    const scores = groupScores[ind.group] || [65, 70, 75, 68, 72];
+    return scores[hash % scores.length];
+  };
+
+  // MVP mapping: treat indicator `val` as the score=50 equivalent, then scale numeric part linearly.
+  const approxRealEquivalent = (ind, score0to100) => {
+    const v = String(ind.val || "");
+    const m = v.match(/[-+]?\d*\.?\d+/);
+    if (!m) return v || "—";
+
+    const base = parseFloat(m[0]);
+    if (!Number.isFinite(base)) return v;
+
+    const scaled = base * (score0to100 / 50);
+    const unitSuffix = v.slice((m.index || 0) + m[0].length).trim();
+
+    const abs = Math.abs(scaled);
+    const decimals = abs >= 100 ? 0 : abs >= 10 ? 1 : 2;
+    const formatted = scaled.toFixed(decimals);
+
+    if (!unitSuffix) return formatted;
+    const joiner = unitSuffix.startsWith("%") || unitSuffix.startsWith("°") ? "" : " ";
+    return `${formatted}${joiner}${unitSuffix}`;
+  };
+
+  const allCountries = useMemo(() => Object.values(COUNTRIES), []);
+  const compRiskVals = useMemo(() => {
+    const compRiskFromCountry = (c) => {
+      const hp = c.hp || 0;
+      const ex = c.ex || 0;
+      const fr = c.fr || 0;
+      const ac = c.ac || 0;
+      const fs = c.fs || 0;
+      // Higher AC reduces risk (protective capacity).
+      return (hp + ex + fr + (1 - ac) + fs) / 5;
+    };
+    return allCountries.map(compRiskFromCountry).sort((a, b) => a - b);
+  }, [allCountries]);
+
+  const compRiskFromPillars = (pillars01) => {
+    const {hp, ex, fr, ac, fs} = pillars01;
+    return (hp + ex + fr + (1 - ac) + fs) / 5;
+  };
+
+  const baselineIndicatorScores = useMemo(() => {
+    const keys = {};
+    for (const ind of country.indicators) {
+      const k = `${ind.group}::${ind.label}`;
+      keys[k] = getDummyScore(ind);
+    }
+
+    // Calibrate each pillar so the average indicator score equals the displayed pillar score.
+    const baselineByPillar = {};
+    for (const p of CRISP_PILLARS) {
+      const pk = p.key;
+      const pillarInds = country.indicators.filter(i => i.group === PILLAR_GROUP[pk]);
+      const target = (country[pk] || 0) * 100;
+      if (!pillarInds.length) continue;
+
+      const dummyAvg = pillarInds.reduce((s, ind) => s + keys[`${ind.group}::${ind.label}`], 0) / pillarInds.length;
+      const shift = target - dummyAvg;
+      baselineByPillar[pk] = { pillarInds, target, shift };
+    }
+
+    const out = {};
+    for (const ind of country.indicators) {
+      const pk = PILLAR_BY_GROUP[ind.group];
+      const baseDummy = keys[`${ind.group}::${ind.label}`];
+      const meta = baselineByPillar[pk];
+      const shift = meta?.shift || 0;
+      out[`${ind.group}::${ind.label}`] = clamp(baseDummy + shift, 0, 100);
+    }
+    return out;
+  }, [country]);
+
+  const [sliderScores, setSliderScores] = useState(baselineIndicatorScores);
+  useEffect(() => setSliderScores(baselineIndicatorScores), [baselineIndicatorScores]);
+
+  const indicatorsByPillar = useMemo(() => {
+    const out = {hp: [], ex: [], fr: [], ac: [], fs: []};
+    for (const ind of country.indicators) {
+      const pk = PILLAR_BY_GROUP[ind.group];
+      if (out[pk]) out[pk].push(ind);
+    }
+    return out;
+  }, [country]);
+
+  const pillarSim01 = useMemo(() => {
+    const avg01 = (pk) => {
+      const inds = indicatorsByPillar[pk] || [];
+      if (!inds.length) return 0;
+      const sum = inds.reduce((s, ind) => s + ((sliderScores[`${ind.group}::${ind.label}`] ?? 0) / 100), 0);
+      return sum / inds.length;
+    };
+    return {
+      hp: avg01("hp"),
+      ex: avg01("ex"),
+      fr: avg01("fr"),
+      ac: avg01("ac"),
+      fs: avg01("fs"),
+    };
+  }, [indicatorsByPillar, sliderScores]);
+
+  const compRiskScenario01 = useMemo(() => compRiskFromPillars(pillarSim01), [pillarSim01]);
+  const compRiskBaseline01 = useMemo(() => compRiskFromPillars({
+    hp: country.hp || 0,
+    ex: country.ex || 0,
+    fr: country.fr || 0,
+    ac: country.ac || 0,
+    fs: country.fs || 0,
+  }), [country]);
+
+  const crispFromCompRisk = (compRisk01) => {
+    const n = compRiskVals.length || 1;
+    let count = 0;
+    for (const v of compRiskVals) {
+      if (v <= compRisk01) count++;
+    }
+    return 100 * (count / n);
+  };
+
+  const crispScenario = useMemo(() => crispFromCompRisk(compRiskScenario01), [compRiskScenario01, compRiskVals]);
+  const crispBaselineFormula = useMemo(() => crispFromCompRisk(compRiskBaseline01), [compRiskBaseline01, compRiskVals]);
+  const crispBaseline = country.crisp ?? crispBaselineFormula;
+
+  const crispColorScenario = crispScenario >= 65 ? C.bad : crispScenario >= 45 ? C.warn : C.good;
+  const crispClassScenario = crispScenario >= 80 ? "Very High" : crispScenario >= 65 ? "High" : crispScenario >= 45 ? "Medium" : crispScenario >= 25 ? "Low" : "Very Low";
+  const crispDelta = Math.round(crispScenario - crispBaseline);
+
+  const deltaColor = (delta, {positiveGood}={positiveGood:false}) => {
+    if (delta === 0) return MUTED;
+    if (delta > 0) return positiveGood ? C.good : C.bad;
+    return positiveGood ? C.bad : C.good;
+  };
+
+  const getPillarDeltaColor = (pk, deltaPct) => {
+    // AC is inverted: higher AC => lower risk.
+    if (pk === "ac") return deltaColor(deltaPct, {positiveGood: true});
+    return deltaColor(deltaPct, {positiveGood: false});
+  };
+
+  const summaryCard = ({title, valuePct, baselinePct, color, deltaPct, subtitle, positiveGood, isComposite}) => {
+    const d = Math.round(deltaPct);
+    const dCol = deltaColor(d, {positiveGood: !!positiveGood});
+    const valueSize = isComposite ? 34 : 28;
+    const badgeColor = color || "#111827";
+    return (
+      <div
+        style={{
+          border: isComposite ? `2px solid ${hexToRgba(badgeColor, 0.35)}` : `1px solid ${BORDER}`,
+          borderLeft: isComposite ? `6px solid ${hexToRgba(badgeColor, 0.8)}` : undefined,
+          borderRadius:12,
+          padding:12,
+          background: isComposite ? `linear-gradient(180deg, ${hexToRgba(badgeColor, 0.08)}, #ffffff 55%)` : CARD_SOFT,
+          boxShadow: isComposite ? `0 12px 35px ${hexToRgba(badgeColor, 0.14)}` : "none",
+          // Prevent flex-shrink so cards keep their intended size; container can horizontally scroll instead.
+          flex: "0 0 auto",
+          minWidth: 160
+        }}
+      >
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"baseline", gap:12}}>
+          <div>
+            <div style={{fontSize:12, color:MUTED, fontFamily:"'DM Mono',monospace", letterSpacing:"0.5px"}}>{title.toUpperCase()}</div>
+            <div style={{fontSize:valueSize, fontWeight:900, color:color, fontFamily:"'DM Mono',monospace", lineHeight:1}}>{Math.round(valuePct)}</div>
+          </div>
+          <div style={{textAlign:"right"}}>
+            {subtitle && (
+              <div style={{fontSize:12, fontWeight:800, color:color, background:hexToRgba(badgeColor, 0.10), border:`1px solid ${hexToRgba(badgeColor, 0.25)}`, borderRadius:6, padding:"2px 8px", display:"inline-block"}}>
+                {subtitle}
+              </div>
+            )}
+            <div style={{marginTop:6, fontSize:12, fontWeight:800, color:dCol, fontFamily:"'DM Mono',monospace"}}>
+              {d === 0 ? "Δ 0" : `Δ ${signFmt(d)}`}
+            </div>
+          </div>
+        </div>
+        <div style={{marginTop:10, fontSize:11, color:MUTED, fontFamily:"'DM Mono',monospace"}}>
+          Baseline: {Math.round(baselinePct)}
+        </div>
+      </div>
+    );
+  };
+
+  // Empirical CDF rank details for the formula panel.
+  const cdfCount = useMemo(() => {
+    let count = 0;
+    for (const v of compRiskVals) if (v <= compRiskScenario01) count++;
+    return count;
+  }, [compRiskVals, compRiskScenario01]);
+  const cdfN = compRiskVals.length || 1;
+
+  return (
+    <div style={{background:WHITE_BG, border:`1px solid ${BORDER}`, borderRadius:14, padding:18, color:TEXT_DARK}}>
+      <div style={{display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:12, marginBottom:14}}>
+        <div>
+          <div style={{fontSize:12, fontFamily:"'DM Mono',monospace", letterSpacing:"1.2px", color:MUTED}}>SIMULATION MODE</div>
+          <div style={{marginTop:6, fontSize:16, fontWeight:800}}>Scenario</div>
+          <div style={{marginTop:3, fontSize:12, color:MUTED, fontFamily:"'DM Mono',monospace"}}>Baseline uses currently displayed pillars; sliders explore “what would it take” impacts.</div>
+        </div>
+        <div style={{display:"flex", gap:8, alignItems:"center", flexWrap:"wrap", justifyContent:"flex-end"}}>
+          <button
+            onClick={() => setSliderScores(baselineIndicatorScores)}
+            style={{
+              padding:"8px 12px",
+              borderRadius:10,
+              cursor:"pointer",
+              fontSize:12,
+              fontFamily:"'DM Mono',monospace",
+              border:`1px solid rgba(15,23,42,0.12)`,
+              background:"#fff",
+              color:TEXT_DARK
+            }}
+          >
+            Reset to Baseline
+          </button>
+          <button
+            onClick={onExit}
+            style={{
+              padding:"8px 12px",
+              borderRadius:10,
+              cursor:"pointer",
+              fontSize:12,
+              fontFamily:"'DM Mono',monospace",
+              border:`1px solid rgba(15,23,42,0.12)`,
+              background:"#fff",
+              color:TEXT_DARK
+            }}
+          >
+            Exit Simulation
+          </button>
+        </div>
+      </div>
+
+      {/* Summary cards */}
+      <div style={{display:"flex", flexWrap:"nowrap", gap:12, overflowX:"auto", alignItems:"stretch"}}>
+        {summaryCard({
+          title: "Composite",
+          valuePct: crispScenario,
+          baselinePct: crispBaseline,
+          color: crispColorScenario,
+          deltaPct: crispDelta,
+          subtitle: crispClassScenario,
+          positiveGood: false,
+          isComposite: true
+        })}
+        {CRISP_PILLARS.map(p => {
+          const pk = p.key;
+          const basePct = (country[pk] || 0) * 100;
+          const valuePct = pillarSim01[pk] * 100;
+          const deltaPct = valuePct - basePct;
+          const label = p.short;
+          return summaryCard({
+            title: label,
+            valuePct,
+            baselinePct: basePct,
+            color: p.color,
+            deltaPct,
+            subtitle: null,
+            positiveGood: pk === "ac",
+            isComposite: false
+          });
+        })}
+      </div>
+
+      {/* Indicator sliders */}
+      <div style={{marginTop:14}}>
+        {CRISP_PILLARS.map(p => {
+          const pk = p.key;
+          const inds = indicatorsByPillar[pk] || [];
+          if (!inds.length) return null;
+
+          return (
+            <div key={pk} style={{marginTop:14, border:`1px solid ${BORDER}`, borderRadius:14, overflow:"hidden"}}>
+              <div style={{padding:"10px 12px", background:`rgba(0,0,0,0.02)`, borderBottom:`1px solid ${ROW_BORDER}`, display:"flex", justifyContent:"space-between", alignItems:"center"}}>
+                <div>
+                  <div style={{fontSize:12, color:MUTED, fontFamily:"'DM Mono',monospace", letterSpacing:"0.6px"}}>{PILLAR_GROUP[pk].toUpperCase()}</div>
+                  <div style={{marginTop:3, fontSize:13, fontWeight:800, color:TEXT_DARK}}>{p.desc ? p.desc.split(".")[0] : ""}</div>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:12, color:MUTED, fontFamily:"'DM Mono',monospace"}}>Scenario pillar</div>
+                  <div style={{fontSize:20, fontWeight:900, color:p.color, fontFamily:"'DM Mono',monospace"}}>{Math.round(pillarSim01[pk] * 100)}</div>
+                </div>
+              </div>
+
+              <div style={{padding:14, display:"flex", flexDirection:"column", gap:12}}>
+                {inds.map((ind) => {
+                  const k = `${ind.group}::${ind.label}`;
+                  const baseline = baselineIndicatorScores[k] ?? 0;
+                  const value = sliderScores[k] ?? baseline;
+                  const delta = value - baseline;
+
+                  const deltaPct = Math.round(delta);
+                  const dCol = pk === "ac" ? deltaColor(deltaPct, {positiveGood: true}) : deltaColor(deltaPct, {positiveGood: false});
+
+                  const approxNow = approxRealEquivalent(ind, value);
+                  const approx25 = approxRealEquivalent(ind, 25);
+                  const approx50 = approxRealEquivalent(ind, 50);
+                  const approx75 = approxRealEquivalent(ind, 75);
+
+                  return (
+                    <div key={k} style={{border:`1px solid ${ROW_BORDER}`, borderRadius:12, padding:14, background:"#fff"}}>
+                      <div style={{display:"flex", justifyContent:"space-between", gap:12, alignItems:"flex-start", flexWrap:"wrap"}}>
+                        <div style={{minWidth:240, flex:1}}>
+                          <div style={{fontSize:12, fontWeight:800, color:TEXT_DARK}}>{ind.label}</div>
+                          <div style={{marginTop:4, fontSize:12, color:MUTED, lineHeight:1.3}}>
+                            ≈ {approxNow}
+                          </div>
+                          <div style={{marginTop:6, fontSize:10, color:"#94a3b8", fontFamily:"'DM Mono',monospace"}}>
+                            P25 ≈ {approx25} · P50 ≈ {approx50} · P75 ≈ {approx75}
+                          </div>
+                        </div>
+
+                        <div style={{textAlign:"right", minWidth:140}}>
+                          <div style={{fontSize:22, fontWeight:900, fontFamily:"'DM Mono',monospace", color:pk === "ac" ? C.good : C.bad}}>
+                            {Math.round(value)}
+                          </div>
+                          <div style={{marginTop:4, fontSize:12, fontWeight:900, fontFamily:"'DM Mono',monospace", color:dCol}}>
+                            {deltaPct === 0 ? "Δ 0" : `Δ ${signFmt(deltaPct)}`}
+                          </div>
+                        </div>
+                      </div>
+
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={value}
+                        onChange={(e) => {
+                          const next = Number(e.target.value);
+                          setSliderScores(prev => ({...prev, [k]: next}));
+                        }}
+                        style={{
+                          width:"100%",
+                          marginTop:12,
+                          accentColor:p.color
+                        }}
+                        aria-label={`Simulated indicator score ${ind.label}`}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Formula / trace */}
+      <div style={{marginTop:18, background:"#f8fafc", border:`1px solid ${BORDER}`, borderRadius:14, padding:14}}>
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", gap:12, marginBottom:10}}>
+          <div>
+            <div style={{fontSize:12, fontFamily:"'DM Mono',monospace", letterSpacing:"0.8px", color:MUTED}}>FORMULA TRACE</div>
+            <div style={{marginTop:4, fontSize:14, fontWeight:900}}>Indicator → Pillar → Composite</div>
+          </div>
+          <div style={{fontSize:12, color:MUTED, fontFamily:"'DM Mono',monospace"}}>All outputs are scenario values (unpublished).</div>
+        </div>
+
+        <div style={{fontSize:12, lineHeight:1.65, fontFamily:"'DM Mono',monospace", color:TEXT_DARK}}>
+          <div>HP = {pillarSim01.hp.toFixed(2)} · EX = {pillarSim01.ex.toFixed(2)} · FR = {pillarSim01.fr.toFixed(2)} · AC = {pillarSim01.ac.toFixed(2)} · FS = {pillarSim01.fs.toFixed(2)}</div>
+          <div style={{marginTop:6}}>
+            compRisk = (HP + EX + FR + (1 − AC) + FS) / 5
+            {" = "}
+            ({pillarSim01.hp.toFixed(2)} + {pillarSim01.ex.toFixed(2)} + {pillarSim01.fr.toFixed(2)} + (1 − {pillarSim01.ac.toFixed(2)}) + {pillarSim01.fs.toFixed(2)}) / 5
+            {" = "}
+            {compRiskScenario01.toFixed(3)}
+          </div>
+          <div style={{marginTop:6}}>
+            CRISP = 100 × ( #{cdfCount} countries with compRisk ≤ {compRiskScenario01.toFixed(3)} ) / {cdfN}
+            {" = "}
+            {crispScenario.toFixed(1)}
+          </div>
+          <div style={{marginTop:8, color:MUTED}}>
+            Baseline (pillars): HP {Math.round((country.hp || 0) * 100)} · EX {Math.round((country.ex || 0) * 100)} · FR {Math.round((country.fr || 0) * 100)} · AC {Math.round((country.ac || 0) * 100)} · FS {Math.round((country.fs || 0) * 100)}
+          </div>
+          <div style={{marginTop:2, color:MUTED}}>
+            Published baseline CRISP (dataset): {country.crisp} · Formula baseline: {crispBaselineFormula.toFixed(1)} · Delta: {crispDelta}
+          </div>
+          <div style={{marginTop:6, color:MUTED}}>
+            Percentile interpretation: 50 means the 50th percentile in the country distribution (empirical CDF), not “50% of a raw value”.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CountryDetail({country, onClose, activePillar, onPillarChange}){
   const setActivePillar = onPillarChange;
+  const [simOpen, setSimOpen] = useState(false);
+
+  useEffect(() => {
+    // Keep exec-summary context while in simulation.
+    if (simOpen && activePillar) setActivePillar(null);
+  }, [simOpen, activePillar, setActivePillar]);
 
   return(
     <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
@@ -2216,6 +2655,28 @@ function CountryDetail({country, onClose, activePillar, onPillarChange}){
         </div>
         <div style={{display:"flex",gap:6,alignItems:"center"}}>
           <button onClick={onClose} style={{...ghostBtn,fontSize:12}}>← ALL COUNTRIES</button>
+          {!activePillar && !simOpen && (
+            <button
+              onClick={() => {
+                setActivePillar(null);
+                setSimOpen(true);
+              }}
+              style={{
+                padding:"5px 12px",
+                borderRadius:6,
+                cursor:"pointer",
+                fontSize:12,
+                background:"rgba(255,255,255,0.04)",
+                border:`1px solid rgba(255,255,255,0.12)`,
+                color:"rgba(255,255,255,0.55)",
+                fontFamily:"'DM Mono',monospace",
+                letterSpacing:"0.5px",
+                transition:"all 0.2s ease"
+              }}
+            >
+              Simulation Mode
+            </button>
+          )}
           <DownloadButton country={country}/>
         </div>
       </div>
@@ -2227,12 +2688,20 @@ function CountryDetail({country, onClose, activePillar, onPillarChange}){
         <div style={{flex:1,overflowY:"auto",padding:"16px 20px",animation:"fadeIn 0.15s ease"}}>
           <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}`}</style>
 
-          {/* ── NO PILLAR SELECTED: overview ── */}
-          {!activePillar&&(
-            <div style={{display:"flex",flexDirection:"column",gap:14}}>
-              <NarrativePanel country={country}/>
-            </div>
-          )}
+          {simOpen ? (
+            <SimulationModePanel
+              country={country}
+              onExit={() => setSimOpen(false)}
+            />
+          ) : (
+            <>
+
+            {/* ── NO PILLAR SELECTED: overview ── */}
+            {!activePillar&&(
+              <div style={{display:"flex",flexDirection:"column",gap:14}}>
+                <NarrativePanel country={country}/>
+              </div>
+            )}
 
           {/* ── HP: Hazard Pressure — totals + mix + hazards + indicators + events ── */}
           {activePillar==="hp"&&(
@@ -2334,6 +2803,8 @@ function CountryDetail({country, onClose, activePillar, onPillarChange}){
               <IndicatorsByGroup country={country} groups={["FS · Future Stress"]}/>
               <PolicyPanel country={country}/>
             </div>
+          )}
+            </>
           )}
         </div>
       </div>
